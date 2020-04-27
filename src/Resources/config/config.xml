@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title lang="de-DE">Mapp Intelligence tiLoader</title>
+        <title>Mapp Intelligence tiLoader</title>
+        <input-field type="text">
+            <name>tiId</name>
+            <label lang="de-DE">tiId</label>
+            <label>tiId</label>
+            <helpText lang="de-DE">tiId eingeben</helpText>
+            <helpText>Enter your tiId</helpText>
+            <placeholder lang="de-DE">1234</placeholder>
+            <placeholder>111111111111111</placeholder>
+            <copyable>true</copyable>
+        </input-field>
+        <input-field type="text">
+            <name>tiDomain</name>
+            <label lang="de-DE">tiDomain</label>
+            <label>tiDomain</label>
+            <helpText lang="de-DE">tiDomain eingeben</helpText>
+            <helpText>Enter your tiId</helpText>
+            <placeholder lang="de-DE">1234</placeholder>
+            <placeholder>responder.wt-safetag.com</placeholder>
+            <copyable>true</copyable>
+        </input-field>
+    </card>
+</config>

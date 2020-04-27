@@ -1,0 +1,42 @@
+{
+    "name": "mapp/intelligence",
+    "description": "Mapp Intelligence tracking",
+    "version": "v1.0.0",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Mapp Digital",
+            "homepage": "https://mapp.com"
+        }
+    ],
+    "require": {
+        "shopware/core": "*"
+    },
+    "extra": {
+        "shopware-plugin-class": "Mapp\\MappIntelligence\\MappIntelligence",
+        "label": {
+            "de-DE": "Mapp Intelligence",
+            "en-GB": "Mapp Intelligence"
+        },
+        "description": {
+            "de-DE": "Mapp Intelligence tiLoader",
+            "en-GB": "Mapp Intelligence tiLoader"
+        },
+        "plugin-icon": "src/Resources/config/MappIcon.png",
+        "copyright": "(c) by Mapp Digital",
+        "manufacturerLink": {
+            "de-DE": "https://mapp.com",
+            "en-GB": "https://mapp.com"
+        },
+        "supportLink": {
+            "de-DE": "https://docs.mapp.com/",
+            "en-GB": "https://docs.mapp.com/"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Mapp\\MappIntelligence\\": "src/"
+        }
+    }
+}
