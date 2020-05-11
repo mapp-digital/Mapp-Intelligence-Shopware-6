@@ -42,19 +42,18 @@ class DalDealer implements DalDealerInterface {
                 $this->trackData['category'] = 'product';
                 $this->trackData['subCategory'] = 'product detail';
                 $this->trackData['shoppingCartStatus'] = 'view';
-                $productId = $event->getRequest()->attributes->get('productId');
-                $product = $this->productRepository->search(
-                    new Criteria([
-                        $productId
-                    ]),
-                    \Shopware\Core\Framework\Context::createDefaultContext()
-                )->first();
-                $this->trackData['productName'] = $product->getName();
-                $this->trackData['productPrice'] = $product->getPrice()->first()->getGross();
+                $productId = $request->attributes->get('productId');
+                $this->enrichTrackingDataWithProducts(array($productId));
                 break;
             case 'frontend.checkout.line-item.add':
                 $this->getDefaultData($event);
-                $product = $event->getRequest()->request->get('lineItems');
+                $products = $request->request->get('lineItems');
+                $productIds = array();
+                foreach ($products as $id => $product) {
+                    array_push($productIds, $id);
+                    $this->productTrackdataSetter('productQuantity', $product['quantity']);
+                }
+                $this->enrichTrackingDataWithProducts($productIds);
                 $this->trackData['shoppingCartStatus'] = 'basket';
                 break;
             default:
@@ -83,21 +82,26 @@ class DalDealer implements DalDealerInterface {
 //            \Shopware\Core\Framework\Context::createDefaultContext()
 //        );
 //        $price = $product->getPrice()->first();
-//        return 'ass-piss-shit';
+//        return 'test';
     }
 
     private function getDefaultData($event): void {
         $this->trackData['route'] = $event->getRequest()->attributes->get('_route');
     }
 
-    private function getProducts($id, $context): ?EntityCollection {
-        return $this->productRepository->search(
-        new Criteria([
-            $id
-        ]),
-        $context
-        );
+    private function enrichTrackingDataWithProducts($ids): void {
+       $entities = $this->productRepository->search(
+           new Criteria($ids),
+           \Shopware\Core\Framework\Context::createDefaultContext()
+       )->getElements();
+       foreach ($entities as $id => $product) {
+           $this->productTrackdataSetter('productId', $id);
+           $this->productTrackdataSetter('productName', $product->getName());
+           $this->productTrackdataSetter('productPrice', $product->getPrice()->first()->getGross());
+       }
     }
-
-
+    private function productTrackdataSetter(string $key, $value): void {
+        $this->trackData[$key] = isset($this->trackData[$key]) ?
+            $this->trackData[$key] . ';' . $value : $value;
+    }
 }
