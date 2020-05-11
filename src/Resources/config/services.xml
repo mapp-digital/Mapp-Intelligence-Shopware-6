@@ -7,6 +7,18 @@
     <services>
         <service id="Mapp\MappIntelligence\Subscriber\HeaderSubscriber" class="Mapp\MappIntelligence\Subscriber\HeaderSubscriber">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Mapp\MappIntelligence\Services\DalDealer"/>
+            <tag name="kernel.event_subscriber" />
+        </service>
+        <service id="Mapp\MappIntelligence\Subscriber\StorefrontRenderSubscriber" class="Mapp\MappIntelligence\Subscriber\StorefrontRenderSubscriber">
+            <tag name="kernel.event_subscriber" />
+        </service>
+        <service id="Mapp\MappIntelligence\Services\DalDealer">
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="currency.repository"/>
+        </service>
+        <service id="Mapp\MappIntelligence\Subscriber\KernelEventsSubscriber" class="Mapp\MappIntelligence\Subscriber\KernelEventsSubscriber">
+            <argument type="service" id="Mapp\MappIntelligence\Services\DalDealer"/>
             <tag name="kernel.event_subscriber" />
         </service>
     </services>
