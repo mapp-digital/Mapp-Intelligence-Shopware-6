@@ -10,9 +10,6 @@
             <argument type="service" id="Mapp\MappIntelligence\Services\DalDealer"/>
             <tag name="kernel.event_subscriber" />
         </service>
-        <service id="Mapp\MappIntelligence\Subscriber\StorefrontRenderSubscriber" class="Mapp\MappIntelligence\Subscriber\StorefrontRenderSubscriber">
-            <tag name="kernel.event_subscriber" />
-        </service>
         <service id="Mapp\MappIntelligence\Services\DalDealer">
             <argument type="service" id="product.repository"/>
             <argument type="service" id="currency.repository"/>
