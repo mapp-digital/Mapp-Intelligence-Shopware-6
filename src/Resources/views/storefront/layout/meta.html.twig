@@ -2,12 +2,6 @@
 
 {% block layout_head_meta_tags_charset %}
     {{ parent() }}
-    {% block ti_dataLayer %}
-        <script type="text/javascript">
-            console.log(JSON.parse('{{ page.header.extensions.mappIntelligence._ti|raw }}'));
-            window._ti = JSON.parse('{{ page.header.extensions.mappIntelligence._ti|raw }}');
-        </script>
-    {% endblock %}
     {% block ti_loader_snippet %}
         <script type="text/javascript">
             window._tiConfig = window._tiConfig || {
