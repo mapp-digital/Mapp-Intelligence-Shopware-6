@@ -34,6 +34,13 @@
                 window._ti.productName = '{{ page.product.translated.name }}';
                 window._ti.productQuantity = '1';
                 window._ti.shoppingCartStatus = 'view';
+                window._ti.productCategories = JSON.parse('{{ getCategoryNames(page.product.categoryTree)|json_encode|raw }}');
+                if(window._ti.productCategories[0]) {
+                    window._ti.productCategory = window._ti.productCategories[0];
+                }
+                if(window._ti.productCategories[1]) {
+                    window._ti.productSubCategory = window._ti.productCategories[1];
+                }
             {% endif %}
         </script>
 

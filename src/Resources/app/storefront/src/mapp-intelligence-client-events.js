@@ -8,10 +8,6 @@ export default class MappIntelligenceClientEvents extends Plugin {
         this.subscribeEvents();
     }
 
-    hiddenInputWithJSONCreator(element, dataObject) {
-        console.log('plugin - ', element, dataObject);
-    }
-
     subscribeEvents() {
         var paginations = window.PluginManager.getPluginInstances('ListingPagination');
         paginations.forEach( (element) => {
@@ -87,12 +83,18 @@ export default class MappIntelligenceClientEvents extends Plugin {
     }
 
     addToCartHandler(event) {
-
-        console.log('MAPP -> add-to-cart event -> ', event);
-
         var trackingData = {...DomAccess.querySelector(event.target, '.mapp-tracking-data', true).dataset};
         trackingData.quantity = event.target.elements['lineItems[' + trackingData.productShopwareId + '][quantity]'].value;
         trackingData.productPrice = trackingData.quantity * trackingData.productPrice;
+        if(trackingData.productCategories) {
+            trackingData.productCategories = JSON.parse(trackingData.productCategories);
+            if(trackingData.productCategories[0]) {
+                trackingData.productCategory = trackingData.productCategories[0];
+            }
+            if(trackingData.productCategories[1]) {
+                trackingData.productSubCategory = trackingData.productCategories[1];
+            }
+        }
         console.log('MAPP -> add-to-cart data -> ', trackingData);
     }
 

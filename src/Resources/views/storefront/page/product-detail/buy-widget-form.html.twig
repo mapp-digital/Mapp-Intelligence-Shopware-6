@@ -6,7 +6,7 @@
          data-product-id="{{ page.product.productNumber }}"
          data-product-name="{{ page.product.translated.name }}"
          data-product-price="{{ page.product.CalculatedListingPrice.to.totalPrice }}"
-         data-product-categories="{{ page.product.categoryTree|json_encode|e('html_attr') }}"
+         data-product-categories="{{ getCategoryNames(page.product.categoryTree)|json_encode|e('html_attr') }}"
     ></div>
     {{parent()}}
 {% endblock %}

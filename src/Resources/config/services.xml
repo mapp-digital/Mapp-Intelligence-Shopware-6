@@ -9,5 +9,13 @@
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <tag name="kernel.event_subscriber" />
         </service>
+        <service id="Mapp\MappIntelligence\Services\DalDealer">
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="category.repository"/>
+        </service>
+        <service id="Mapp\MappIntelligence\Twig\MappExtension">
+            <argument type="service" id="Mapp\MappIntelligence\Services\DalDealer"/>
+            <tag name="twig.extension" />
+        </service>
     </services>
 </container>
