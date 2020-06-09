@@ -1,0 +1,12 @@
+{% sw_extends '@Storefront/storefront/page/product-detail/buy-widget-form.html.twig' %}
+
+{% block page_product_detail_buy_container %}
+    <div class="mapp-tracking-data"
+         data-product-shopware-id="{{ page.product.id }}"
+         data-product-id="{{ page.product.productNumber }}"
+         data-product-name="{{ page.product.translated.name }}"
+         data-product-price="{{ page.product.CalculatedListingPrice.to.totalPrice }}"
+         data-product-categories="{{ page.product.categoryTree|json_encode|e('html_attr') }}"
+    ></div>
+    {{parent()}}
+{% endblock %}

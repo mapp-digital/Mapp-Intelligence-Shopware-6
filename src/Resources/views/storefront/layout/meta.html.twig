@@ -13,4 +13,30 @@
                 new Date,c=b.getTime()+1E3*parseInt(a.wt_r);b.setTime(c);d.cookie="wt_r=1;path=/;expires="+b.toUTCString()}};c.onerror=function(){"undefined"!==typeof a.wt_mcp_hide&&"function"===typeof a.wt_mcp_hide.show&&(a.wt_mcp_hide.show(),a.wt_mcp_hide.show=function(){})};c.src="//"+g(f);e.parentNode.insertBefore(c,e)}})(window,document,"script",_tiConfig);
         </script>
     {% endblock %}
+
+    {% block _ti %}
+        <script>
+            window._ti = {
+                pageName: location.host + location.pathname,
+                customerId: '{{ context.customer.uniqueIdentifier }}',
+                currency: '{{ context.currency.isoCode }}'
+            }
+
+            {% if activeRoute == 'frontend.search.page' %}
+                window._ti.searchTerm = '{{ page.searchTerm }}';
+                window._ti.numberOfSearchResults = '{{ page.searchResult.total }}';
+            {% endif %}
+
+            {% if activeRoute == 'frontend.detail.page' %}
+                window._ti.productCost = '{{ page.product.calculatedListingPrice.to.unitPrice }}';
+                window._ti.productId = '{{  page.product.productNumber }}';
+                window._ti.productShopwareId = '{{  page.product.id }}';
+                window._ti.productName = '{{ page.product.translated.name }}';
+                window._ti.productQuantity = '1';
+                window._ti.shoppingCartStatus = 'view';
+            {% endif %}
+        </script>
+
+{#        {{ dump() }}#}
+    {% endblock %}
 {% endblock %}

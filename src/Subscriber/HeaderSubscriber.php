@@ -41,6 +41,9 @@ class HeaderSubscriber implements EventSubscriberInterface
             $config['tiDomain'] = 'responder.wt-safetag.com';
         }
 
+        //TODO make this configurable
+        $config['v'] = 5;
+
         $page = $event->getPagelet();
         $page->addExtension('tiLoader', new ArrayEntity($config));
     }

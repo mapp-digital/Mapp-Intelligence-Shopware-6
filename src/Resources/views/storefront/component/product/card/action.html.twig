@@ -1,0 +1,24 @@
+{% sw_extends '@Storefront/storefront/component/product/card/action.html.twig' %}
+
+{# Normal products #}
+{% block component_product_box_action_form %}
+    {{ parent() }}
+    <div class="mapp-tracking-data"
+         data-product-shopware-id="{{ product.id }}"
+         data-product-id="{{ product.productNumber }}"
+         data-product-name="{{ product.translated.name }}"
+         data-product-price="{{ product.CalculatedListingPrice.to.totalPrice }}"
+    ></div>
+{% endblock %}
+
+{# Variants #}
+{% block component_product_box_action_detail %}
+        {{ parent() }}
+    <div class="mapp-tracking-data"
+         data-product-shopware-id="{{ product.id }}"
+         data-product-id="{{ product.productNumber }}"
+         data-product-name="{{ product.translated.name }}"
+         data-product-price="{{ product.CalculatedListingPrice.to.totalPrice }}"
+    ></div>
+
+{% endblock %}
