@@ -19,15 +19,20 @@
             window._ti = {
                 pageName: location.host + location.pathname,
                 customerId: '{{ context.customer.uniqueIdentifier }}',
+                eMailSubscription: '{{ context.customer.newsletter ? 'true' : 'false' }}',
                 currency: '{{ context.currency.isoCode }}'
             }
 
             {% if activeRoute == 'frontend.search.page' %}
+                window._ti.contentCategory = 'Catalogue';
+                window._ti.contentSubcategory = 'Internal Search';
                 window._ti.searchTerm = '{{ page.searchTerm }}';
                 window._ti.numberOfSearchResults = '{{ page.searchResult.total }}';
             {% endif %}
 
             {% if activeRoute == 'frontend.detail.page' %}
+                window._ti.contentCategory = 'Catalogue';
+                window._ti.contentSubcategory = 'Product Detail';
                 window._ti.productCost = '{{ page.product.calculatedListingPrice.to.unitPrice }}';
                 window._ti.productId = '{{  page.product.productNumber }}';
                 window._ti.productShopwareId = '{{  page.product.id }}';
@@ -42,6 +47,13 @@
                     window._ti.productSubCategory = window._ti.productCategories[1];
                 }
             {% endif %}
+            {% if activeRoute == 'frontend.checkout.finish.page' %}
+                window._ti.contentCategory = 'Checkout';
+                window._ti.shoppingCartStatus = 'conf';
+                window._ti.orderId = '{{ page.order.orderNumber }}';
+                window._ti.totalOrderValue = '{{ page.order.amountTotal }}';
+            {% endif %}
+
         </script>
 
 {#        {{ dump() }}#}
