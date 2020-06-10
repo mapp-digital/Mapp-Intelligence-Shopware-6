@@ -1,14 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mapp\MappIntelligence\Subscriber;
 
-use Shopware\Core\System\SystemConfig\Exception\InvalidDomainException;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
+use Shopware\Storefront\Event\StorefrontRenderEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Shopware\Storefront\Pagelet\Header\HeaderPageletLoadedEvent;
-use Shopware\Core\Framework\Struct\ArrayEntity;
 
-class HeaderSubscriber implements EventSubscriberInterface
+
+class StorefrontRenderSubscriber implements EventSubscriberInterface
 {
     /**
      * @var SystemConfigService
@@ -22,18 +21,14 @@ class HeaderSubscriber implements EventSubscriberInterface
         $this->systemConfigService = $systemConfigService;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
-            HeaderPageletLoadedEvent::CLASS => 'onHeaderLoaded'
+            StorefrontRenderEvent::class => 'onRender',
         ];
     }
 
-    /**
-     * @param HeaderPageletLoadedEvent $event
-     * @throws InvalidDomainException
-     */
-    public function onHeaderLoaded(HeaderPageletLoadedEvent $event)
+    public function onRender(StorefrontRenderEvent $event): void
     {
         $salesChannelId = $event->getSalesChannelContext()->getSalesChannel()->getId();
         $config = $this->systemConfigService->get('MappIntelligence.config',  $salesChannelId);
@@ -44,7 +39,9 @@ class HeaderSubscriber implements EventSubscriberInterface
         //TODO make this configurable
         $config['v'] = 5;
 
-        $page = $event->getPagelet();
-        $page->addExtension('tiLoader', new ArrayEntity($config));
+        $event->setParameter(
+            'mappIntelligence',
+            $config
+        );
     }
 }
