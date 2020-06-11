@@ -22,7 +22,6 @@ export default class MappIntelligenceClientEvents extends Plugin {
             'FilterPropertySelect',
             'FilterRange',
             'FilterRating'
-
         ];
         filterPlugins.forEach( (filterType) => {
             var filters = window.PluginManager.getPluginInstances(filterType);

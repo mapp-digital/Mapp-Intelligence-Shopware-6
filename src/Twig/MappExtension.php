@@ -20,7 +20,7 @@ class MappExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('getCategoryNames', [$this, 'getCategoryNames']),
+            new TwigFunction('getCategoryNames', [$this, 'getCategoryNames'])
         ];
     }
 

@@ -6,6 +6,6 @@ interface DalDealerInterface
 {
 
     public function getData($event): ?string;
-    public function getCategoryNames($event): ?array;
+    public function getCategoryNames($categoryIds): ?array;
 
 }

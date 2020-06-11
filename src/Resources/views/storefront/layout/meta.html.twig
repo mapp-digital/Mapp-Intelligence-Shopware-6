@@ -23,11 +23,19 @@
                 currency: '{{ context.currency.isoCode }}'
             }
 
+            {% if activeRoute == 'frontend.navigation.page' %}
+                window._ti.contentCategory = 'Content';
+                window._ti.pageTitle = '{{ page.cmsPage.name }}';
+                {% if page.cmsPage.type == 'landingpage' %}
+                    window._ti.contentSubCategory = 'Landing Page';
+                {% endif %}
+            {% endif %}
+
             {% if activeRoute == 'frontend.search.page' %}
-                window._ti.contentCategory = 'Catalogue';
-                window._ti.contentSubcategory = 'Internal Search';
-                window._ti.searchTerm = '{{ page.searchTerm }}';
-                window._ti.numberOfSearchResults = '{{ page.searchResult.total }}';
+            window._ti.contentCategory = 'Catalogue';
+            window._ti.contentSubcategory = 'Internal Search';
+            window._ti.searchTerm = '{{ page.searchTerm }}';
+            window._ti.numberOfSearchResults = '{{ page.searchResult.total }}';
             {% endif %}
 
             {% if activeRoute == 'frontend.detail.page' %}
@@ -52,7 +60,45 @@
                 window._ti.shoppingCartStatus = 'conf';
                 window._ti.orderId = '{{ page.order.orderNumber }}';
                 window._ti.totalOrderValue = '{{ page.order.amountTotal }}';
+                window._ti.products = [
+                    {% for product in page.order.lineItems %}
+                        {
+                            "productCost" : "{{ product.price.unitPrice }}",
+                            "productId" : "{{ product.payload.productNumber }}",
+                            "productShopwareId" : "{{ product.productId }}",
+                            "productName" : "{{ product.label }}",
+                            "productQuantity": "{{ product.quantity }}",
+                            "productCategories": JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|raw }}')
+                        }{% if loop.last == false %},{% endif %}
+                    {% endfor %}
+                ];
+            (function(){
+                var productKeys = [
+                    'productCost',
+                    'productShopwareId',
+                    'productName',
+                    'productQuantity',
+                    'productCategories'
+                ];
+                for(var i = 0; i < productKeys.length; i++) {
+                    var productKey = productKeys[i];
+                    window._ti[productKey] = '';
+                    for(var j = 0; j < window._ti.products.length; j++) {
+                        var product = window._ti.products[j];
+                        if(typeof product[productKey] === 'string') {
+                            window._ti[productKey] += (j > 0 ? ';': '') + product[productKey];
+                        } else if(Object.prototype.toString.call(product[productKey]) === "[object Array]") {
+                            window._ti[productKey] = [];
+                            for(var k = 0; k < product[productKey].length; k++) {
+                                window._ti[productKey][k] = (j > 0 ? '' : window._ti[productKey][k]) + (j > 0 ? ';': '') + product[productKey][k];
+                            }
+                        }
+
+                    }
+                }
+            })();
             {% endif %}
+
 
         </script>
 
