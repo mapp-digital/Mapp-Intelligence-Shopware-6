@@ -73,13 +73,16 @@
                     {% endfor %}
                 ];
             (function(){
-                var productKeys = [
-                    'productCost',
-                    'productShopwareId',
-                    'productName',
-                    'productQuantity',
-                    'productCategories'
-                ];
+                var productKeys = (function(obj) {
+                    var r = [];
+                    for (var k in obj) {
+                        if (!obj.hasOwnProperty(k)) {
+                            continue;
+                        }
+                        r.push(k);
+                    }
+                    return r;
+                })(_ti.products[0]);
                 for(var i = 0; i < productKeys.length; i++) {
                     var productKey = productKeys[i];
                     window._ti[productKey] = '';
@@ -88,15 +91,36 @@
                         if(typeof product[productKey] === 'string') {
                             window._ti[productKey] += (j > 0 ? ';': '') + product[productKey];
                         } else if(Object.prototype.toString.call(product[productKey]) === "[object Array]") {
-                            window._ti[productKey] = [];
-                            for(var k = 0; k < product[productKey].length; k++) {
-                                window._ti[productKey][k] = (j > 0 ? '' : window._ti[productKey][k]) + (j > 0 ? ';': '') + product[productKey][k];
+                            window._ti[productKey] = window._ti[productKey] || [];
+                            var maxLength = (function(products) { //
+                                var maxLength = 0;
+                                for(var k = 0; k < products.length; k++) {
+                                    if(maxLength < products[k][productKey].length) {
+                                        maxLength = products[k][productKey].length;
+                                    }
+                                }
+                                return maxLength;
+                            })(window._ti.products);
+                            if(j === 0) {
+                                for(var k = 0; k < maxLength; k++) { //init
+                                    window._ti[productKey][k] = '';
+                                }
+                            }
+                            for(k = 0; k < maxLength; k++) { // add values
+                                window._ti[productKey][k] = window._ti[productKey][k] +
+                                    (j > 0 ? ';' : '') +
+                                    (product[productKey][k] !== undefined ? product[productKey][k] : '');
                             }
                         }
-
                     }
                 }
             })();
+            if(window._ti.productCategories[0]) {
+                window._ti.productCategory = window._ti.productCategories[0];
+            }
+            if(window._ti.productCategories[1]) {
+                window._ti.productSubCategory = window._ti.productCategories[1];
+            }
             {% endif %}
 
 
