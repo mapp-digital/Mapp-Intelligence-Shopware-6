@@ -15,46 +15,61 @@
     {% endblock %}
 
     {% block _ti %}
-        <script>
+        <script type="text/javascript">
             window._ti = {
-                pageName: location.host + location.pathname,
-                customerId: '{{ context.customer.uniqueIdentifier }}',
-                eMailSubscription: '{{ context.customer.newsletter ? 'true' : 'false' }}',
-                currency: '{{ context.currency.isoCode }}'
+                "pageName": {{ checkBlacklist('pageName', 'location.host + location.pathname')|raw }}
             }
-
-            {% if activeRoute == 'frontend.navigation.page' %}
-                window._ti.contentCategory = 'Content';
-                window._ti.pageTitle = '{{ page.cmsPage.name }}';
-                {% if page.cmsPage.type == 'landingpage' %}
-                    window._ti.contentSubCategory = 'Landing Page';
-                {% endif %}
+        </script>
+        {{ writeTiDataLayer([
+            {key: 'customerId', value:  context.customer.uniqueIdentifier },
+            {key: 'emailOptIn', value: context.customer.newsletter ? 'true' : 'false' },
+            {key: 'currency', value: context.currency.isoCode },
+        ])|raw }}
+        {% if activeRoute == 'frontend.navigation.page' %}
+            {{ writeTiDataLayer([
+                {key: 'contentCategory', value:  'Content' },
+                {key: 'pageTitle', value: page.cmsPage.name }
+            ])|raw }}
+            {% if page.cmsPage.type == 'landingpage' %}
+                {{ writeTiDataLayer([
+                    {key: 'contentSubCategory', value:  'Landing Page' }
+                ])|raw }}
             {% endif %}
+        {% endif %}
 
-            {% if activeRoute == 'frontend.search.page' %}
-            window._ti.contentCategory = 'Catalogue';
-            window._ti.contentSubcategory = 'Internal Search';
-            window._ti.searchTerm = '{{ page.searchTerm }}';
-            window._ti.numberOfSearchResults = '{{ page.searchResult.total }}';
-            {% endif %}
+        {% if activeRoute == 'frontend.search.page' %}
+            {{ writeTiDataLayer([
+                {key: 'contentCategory', value:  'Catalogue' },
+                {key: 'contentSubcategory', value: 'Internal Search' },
+                {key: 'searchTerm', value: page.searchTerm },
+                {key: 'numberOfSearchResults', value: page.searchResult.total }
+            ])|raw }}
+        {% endif %}
 
-            {% if activeRoute == 'frontend.detail.page' %}
-                window._ti.contentCategory = 'Catalogue';
-                window._ti.contentSubcategory = 'Product Detail';
-                window._ti.productCost = '{{ page.product.calculatedListingPrice.to.unitPrice }}';
-                window._ti.productId = '{{  page.product.productNumber }}';
-                window._ti.productShopwareId = '{{  page.product.id }}';
-                window._ti.productName = '{{ page.product.translated.name }}';
-                window._ti.productQuantity = '1';
-                window._ti.shoppingCartStatus = 'view';
-                window._ti.productCategories = JSON.parse('{{ getCategoryNames(page.product.categoryTree)|json_encode|raw }}');
+        {% if activeRoute == 'frontend.detail.page' %}
+            {{ writeTiDataLayer([
+                {key: 'contentCategory', value:  'Catalogue' },
+                {key: 'contentSubcategory', value: 'Product Detail' },
+                {key: 'productCost', value: page.product.calculatedListingPrice.to.unitPrice },
+                {key: 'productId', value: page.product.productNumber },
+                {key: 'productShopwareId', value: page.product.id },
+                {key: 'productName', value:  page.product.translated.name },
+                {key: 'productQuantity', value:  '1' },
+                {key: 'shoppingCartStatus', value:  'view' },
+                {key: 'productCategories', value:  getCategoryNames(page.product.categoryTree)|json_encode|raw, isJSON: 1 },
+            ])|raw }}
+            <script>
                 if(window._ti.productCategories[0]) {
-                    window._ti.productCategory = window._ti.productCategories[0];
+                    window._ti.productCategory = {{ checkBlacklist('productCategory', 'window._ti.productCategories[0]')|raw }};
                 }
                 if(window._ti.productCategories[1]) {
-                    window._ti.productSubCategory = window._ti.productCategories[1];
+                    window._ti.productSubCategory = {{ checkBlacklist('productSubCategory', 'window._ti.productCategories[1]')|raw }};
                 }
-            {% endif %}
+            </script>
+        {% endif %}
+
+
+        <script>
             {% if activeRoute == 'frontend.checkout.finish.page' %}
                 window._ti.contentCategory = 'Checkout';
                 window._ti.shoppingCartStatus = 'conf';
