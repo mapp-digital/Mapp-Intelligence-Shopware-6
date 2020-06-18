@@ -16,62 +16,63 @@
 
     {% block _ti %}
         <script>
-            window._ti = {
-                pageName: location.host + location.pathname,
-                customerId: '{{ context.customer.uniqueIdentifier }}',
-                eMailSubscription: '{{ context.customer.newsletter ? 'true' : 'false' }}',
-                currency: '{{ context.currency.isoCode }}'
-            }
+            window._ti = {};
+            {% if mappInclude('pageName') %}window._ti.pageName = location.host + location.pathname;{% endif %}
+            {% if mappInclude('customerId') %}window._ti.customerId = '{{ context.customer.uniqueIdentifier }}';{% endif %}
+            {% if mappInclude('eMailSubscription') %}window._ti.eMailSubscription = '{{ context.customer.newsletter ? 'true' : 'false' }}';{% endif %}
+            {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
 
             {% if activeRoute == 'frontend.navigation.page' %}
-                window._ti.contentCategory = 'Content';
-                window._ti.pageTitle = '{{ page.cmsPage.name }}';
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Content';{% endif %}
+                {% if mappInclude('pageTitle') %}window._ti.pageTitle = '{{ page.cmsPage.name }}';{% endif %}
                 {% if page.cmsPage.type == 'landingpage' %}
-                    window._ti.contentSubCategory = 'Landing Page';
+                    {% if mappInclude('contentSubCategory') %}window._ti.contentSubCategory = 'Landing Page';{% endif %}
                 {% endif %}
             {% endif %}
 
             {% if activeRoute == 'frontend.search.page' %}
-            window._ti.contentCategory = 'Catalogue';
-            window._ti.contentSubcategory = 'Internal Search';
-            window._ti.searchTerm = '{{ page.searchTerm }}';
-            window._ti.numberOfSearchResults = '{{ page.searchResult.total }}';
+            {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Catalogue';{% endif %}
+            {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Internal Search';{% endif %}
+            {% if mappInclude('searchTerm') %}window._ti.searchTerm = '{{ page.searchTerm }}';{% endif %}
+            {% if mappInclude('numberOfSearchResults') %}window._ti.numberOfSearchResults = '{{ page.searchResult.total }}';{% endif %}
             {% endif %}
 
             {% if activeRoute == 'frontend.detail.page' %}
-                window._ti.contentCategory = 'Catalogue';
-                window._ti.contentSubcategory = 'Product Detail';
-                window._ti.productCost = '{{ page.product.calculatedListingPrice.to.unitPrice }}';
-                window._ti.productId = '{{  page.product.productNumber }}';
-                window._ti.productShopwareId = '{{  page.product.id }}';
-                window._ti.productName = '{{ page.product.translated.name }}';
-                window._ti.productQuantity = '1';
-                window._ti.shoppingCartStatus = 'view';
-                window._ti.productCategories = JSON.parse('{{ getCategoryNames(page.product.categoryTree)|json_encode|raw }}');
-                if(window._ti.productCategories[0]) {
-                    window._ti.productCategory = window._ti.productCategories[0];
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Catalogue';{% endif %}
+                {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Product Detail';{% endif %}
+                {% if mappInclude('productCost') %}window._ti.productCost = '{{ page.product.calculatedListingPrice.to.unitPrice }}';{% endif %}
+                {% if mappInclude('productId') %}window._ti.productId = '{{  page.product.productNumber }}';{% endif %}
+                {% if mappInclude('productShopwareId') %}window._ti.productShopwareId = '{{  page.product.id }}';{% endif %}
+                {% if mappInclude('productName') %}window._ti.productName = '{{ page.product.translated.name }}';{% endif %}
+                {% if mappInclude('productQuantity') %}window._ti.productQuantity = '1';{% endif %}
+                {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'view';{% endif %}
+                {% if mappInclude('productCategories') %}window._ti.productCategories = JSON.parse('{{ getCategoryNames(page.product.categoryTree)|json_encode|raw }}');{% endif %}
+                if(window._ti.productCategories && window._ti.productCategories[0]) {
+                    {% if mappInclude('productCategory') %}window._ti.productCategory = window._ti.productCategories[0];{% endif %}
                 }
-                if(window._ti.productCategories[1]) {
-                    window._ti.productSubCategory = window._ti.productCategories[1];
+                if(window._ti.productCategories && window._ti.productCategories[1]) {
+                    {% if mappInclude('productSubCategory') %}window._ti.productSubCategory = window._ti.productCategories[1];{% endif %}
                 }
             {% endif %}
             {% if activeRoute == 'frontend.checkout.finish.page' %}
-                window._ti.contentCategory = 'Checkout';
-                window._ti.shoppingCartStatus = 'conf';
-                window._ti.orderId = '{{ page.order.orderNumber }}';
-                window._ti.totalOrderValue = '{{ page.order.amountTotal }}';
-                window._ti.products = [
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Checkout';{% endif %}
+                {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'conf';{% endif %}
+                {% if mappInclude('orderId') %}window._ti.orderId = '{{ page.order.orderNumber }}';{% endif %}
+                {% if mappInclude('totalOrderValue') %}window._ti.totalOrderValue = '{{ page.order.amountTotal }}';{% endif %}
+                {% if mappInclude('products') %}window._ti.products = [];{% endif %}
+
+
                     {% for product in page.order.lineItems %}
-                        {
-                            "productCost" : "{{ product.price.unitPrice }}",
-                            "productId" : "{{ product.payload.productNumber }}",
-                            "productShopwareId" : "{{ product.productId }}",
-                            "productName" : "{{ product.label }}",
-                            "productQuantity": "{{ product.quantity }}",
-                            "productCategories": JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|raw }}')
-                        }{% if loop.last == false %},{% endif %}
+                        if(window._ti.products) {
+                            window._ti.products[{{ loop.index0 }}] = {};
+                            {% if mappInclude('productCost') %}window._ti.products[{{ loop.index0 }}].productCost = "{{ product.price.unitPrice }}";{% endif %}
+                            {% if mappInclude('productId') %}window._ti.products[{{ loop.index0 }}].productId = "{{ product.payload.productNumber }}";{% endif %}
+                            {% if mappInclude('productShopwareId') %}window._ti.products[{{ loop.index0 }}].productShopwareId = "{{ product.productId }}";{% endif %}
+                            {% if mappInclude('productName') %}window._ti.products[{{ loop.index0 }}].productName = "{{ product.label }}";{% endif %}
+                            {% if mappInclude('productQuantity') %}window._ti.products[{{ loop.index0 }}].productQuantity = "{{ product.quantity }}";{% endif %}
+                            {% if mappInclude('productCategories') %}window._ti.products[{{ loop.index0 }}].productCategories = JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|raw }}');{% endif %}
+                        }
                     {% endfor %}
-                ];
             (function(){
                 var productKeys = (function(obj) {
                     var r = [];
@@ -115,11 +116,11 @@
                     }
                 }
             })();
-            if(window._ti.productCategories[0]) {
-                window._ti.productCategory = window._ti.productCategories[0];
+            if(window._ti.productCategories && window._ti.productCategories[0]) {
+                {% if mappInclude('productCategory') %}window._ti.productCategory = window._ti.productCategories[0];{% endif %}
             }
-            if(window._ti.productCategories[1]) {
-                window._ti.productSubCategory = window._ti.productCategories[1];
+            if(window._ti.productCategories && window._ti.productCategories[1]) {
+                {% if mappInclude('productSubCategory') %}window._ti.productSubCategory = window._ti.productCategories[1];{% endif %}
             }
             {% endif %}
 

@@ -83,8 +83,12 @@ export default class MappIntelligenceClientEvents extends Plugin {
 
     addToCartHandler(event) {
         var trackingData = {...DomAccess.querySelector(event.target, '.mapp-tracking-data', true).dataset};
-        trackingData.quantity = event.target.elements['lineItems[' + trackingData.productShopwareId + '][quantity]'].value;
-        trackingData.productPrice = trackingData.quantity * trackingData.productPrice;
+        if(trackingData.productQuantity) {
+            trackingData.productQuantity = event.target.elements['lineItems[' + trackingData.productShopwareId + '][quantity]'].value;
+        }
+        if(trackingData.productCost && trackingData.productQuantity) {
+            trackingData.productCost = trackingData.productQuantity * trackingData.productCost;
+        }
         if(trackingData.productCategories) {
             trackingData.productCategories = JSON.parse(trackingData.productCategories);
             if(trackingData.productCategories[0]) {
@@ -94,7 +98,7 @@ export default class MappIntelligenceClientEvents extends Plugin {
                 trackingData.productSubCategory = trackingData.productCategories[1];
             }
         }
-        console.log('MAPP -> add-to-cart data -> ', trackingData);
+        window._ti = {...window._ti, ...trackingData}
+        console.log('MAPP -> add-to-cart data -> ', window._ti);
     }
-
 }

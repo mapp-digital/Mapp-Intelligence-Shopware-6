@@ -11,7 +11,7 @@
             <label>tiId</label>
             <helpText lang="de-DE">tiId eingeben</helpText>
             <helpText>Enter your tiId</helpText>
-            <placeholder lang="de-DE">1234</placeholder>
+            <placeholder lang="de-DE">111111111111111</placeholder>
             <placeholder>111111111111111</placeholder>
             <copyable>true</copyable>
         </input-field>
@@ -21,8 +21,16 @@
             <label>tiDomain</label>
             <helpText lang="de-DE">tiDomain eingeben</helpText>
             <helpText>Enter your tiId</helpText>
-            <placeholder lang="de-DE">1234</placeholder>
+            <placeholder lang="de-DE">responder.wt-safetag.com</placeholder>
             <placeholder>responder.wt-safetag.com</placeholder>
+            <copyable>true</copyable>
+        </input-field>
+        <input-field type="text">
+        <name>blacklist</name>
+            <label lang="de-DE">Ausschluss aus dem dataLayer</label>
+            <label>Attribute blacklist</label>
+            <helpText lang="de-DE">Datalayer Keys eingeben, die unterdrückt werden sollen (Komma-separiert)</helpText>
+            <helpText>Please indicate any attribute you do not want to display in your data layer (comma-separated)</helpText>
             <copyable>true</copyable>
         </input-field>
     </card>
