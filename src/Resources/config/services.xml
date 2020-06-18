@@ -14,7 +14,6 @@
             <argument type="service" id="category.repository"/>
         </service>
         <service id="Mapp\MappIntelligence\Twig\MappExtension">
-            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="Mapp\MappIntelligence\Services\DalDealer"/>
             <tag name="twig.extension" />
         </service>

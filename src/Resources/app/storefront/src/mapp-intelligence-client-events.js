@@ -55,10 +55,8 @@ export default class MappIntelligenceClientEvents extends Plugin {
             sorting = event.target.options[selectedFilterOption].innerText;
         }
         if(page) {
-            //TODO implement PI
             console.log('MAPP -> switch page: ', page)
         } else if (sorting) {
-            //TODO implement CT
             console.log('MAPP -> switch sorting: ', sorting)
         }
     }
@@ -96,7 +94,7 @@ export default class MappIntelligenceClientEvents extends Plugin {
                 trackingData.productSubCategory = trackingData.productCategories[1];
             }
         }
-        // TODO implement PI
         console.log('MAPP -> add-to-cart data -> ', trackingData);
     }
+
 }
