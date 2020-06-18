@@ -16,6 +16,13 @@ export default class MappIntelligenceClientEvents extends Plugin {
             });
         });
 
+        var searchWidgets = window.PluginManager.getPluginInstances('SearchWidget');
+        searchWidgets.forEach( (element) => {
+            element.$emitter.subscribe('handleInputEvent',  (event) => {
+                this.searchWidgetHandler(event);
+            });
+        });
+
         const filterPlugins = [
             'FilterBoolean',
             'FilterMultiSelect',
@@ -100,5 +107,10 @@ export default class MappIntelligenceClientEvents extends Plugin {
         }
         window._ti = {...window._ti, ...trackingData}
         console.log('MAPP -> add-to-cart data -> ', window._ti);
+    }
+
+    searchWidgetHandler(event) {
+        console.log('Search widget handleInputEvent', event);
+        // TODO update linktracking
     }
 }
