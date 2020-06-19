@@ -52,7 +52,7 @@ export default class MappIntelligenceClientEvents extends Plugin {
 
     searchWidgetHandler() {
         if(window.wts) {
-            window.wts.push('linkTrackInstall');
+            window.wts.push(['linkTrackInstall']);
         }
     }
 
