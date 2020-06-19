@@ -18,12 +18,16 @@
         <script>
             window._ti = {};
             {% if mappInclude('pageName') %}window._ti.pageName = location.host + location.pathname;{% endif %}
-            {% if mappInclude('customerId') %}window._ti.customerId = '{{ context.customer.uniqueIdentifier }}';{% endif %}
-            {% if mappInclude('eMailSubscription') %}window._ti.eMailSubscription = '{{ context.customer.newsletter ? 'true' : 'false' }}';{% endif %}
+            {% if mappInclude('pageTitle') %}window._ti.pageTitle = '{{ metaInformation.metaTitle }}';{% endif %}
+
+            {% if context.customer != null %}
+                {% if mappInclude('customerId') %}window._ti.customerId = '{{ context.customer.id }}';{% endif %}
+                {% if mappInclude('eMailSubscription') %}window._ti.eMailSubscription = '{{ context.customer.newsletter ? 'true' : 'false' }}';{% endif %}
+            {% endif %}
 
             {% if activeRoute == 'frontend.home.page' %}
                 {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Home';{% endif %}
-                {% if mappInclude('pageTitle') %}window._ti.pageTitle = '{{ page.cmsPage.name }}';{% endif %}
+
                 {% if page.cmsPage.type == 'product_list' %}
                     {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Product Overview';{% endif %}
                     {% if mappInclude('pageNumber') %}window._ti.pageNumber = {{ getPageNumber()|raw }};{% endif %}
@@ -31,7 +35,6 @@
             {% endif %}
 
             {% if activeRoute == 'frontend.navigation.page' %}
-                {% if mappInclude('pageTitle') %}window._ti.pageTitle = '{{ page.cmsPage.name }}';{% endif %}
                 {% if page.cmsPage.type == 'landingpage' %}
                     {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Content';{% endif %}
                     {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Landing Page';{% endif %}

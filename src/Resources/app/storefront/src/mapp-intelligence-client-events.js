@@ -22,6 +22,11 @@ export default class MappIntelligenceClientEvents extends Plugin {
                 this.searchWidgetHandler(event);
             });
         });
+
+        this.subscribeAddToCart();
+    }
+
+    subscribeAddToCart() {
         var addToCarts = window.PluginManager.getPluginInstances('AddToCart');
         addToCarts.forEach( (element) => {
             element.$emitter.subscribe('beforeFormSubmit',  (event) => {
@@ -42,6 +47,14 @@ export default class MappIntelligenceClientEvents extends Plugin {
             if(window.wts && window._ti.pageNumber) {
                 window._ti.pageNumber = page;
                 window.wts.push(['send', 'pageupdate']);
+                var oldAddToCartLength = window.PluginManager.getPluginInstances('AddToCart').length;
+                var intervalId = setInterval(() => {
+                    var currentAddToCartAmounts = window.PluginManager.getPluginInstances('AddToCart').length;
+                    if(currentAddToCartAmounts !== oldAddToCartLength) {
+                        this.subscribeAddToCart();
+                        clearInterval(intervalId);
+                    }
+                },500);
             }
         } else if (sorting) {
             if(window.wts) {
@@ -57,6 +70,7 @@ export default class MappIntelligenceClientEvents extends Plugin {
     }
 
     addToCartHandler(event) {
+        var backup = JSON.stringify(window._ti);
         var trackingData = { ...DomAccess.querySelector(event.target, '.mapp-tracking-data', true).dataset };
         if(trackingData.productQuantity) {
             trackingData.productQuantity = event.target.elements['lineItems[' + trackingData.productShopwareId + '][quantity]'].value;
@@ -77,5 +91,6 @@ export default class MappIntelligenceClientEvents extends Plugin {
         if(window.wts) {
             window.wts.push(['send', 'pageupdate']);
         }
+        window._ti = JSON.parse(backup);
     }
 }
