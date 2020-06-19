@@ -20,7 +20,6 @@
             {% if mappInclude('pageName') %}window._ti.pageName = location.host + location.pathname;{% endif %}
             {% if mappInclude('customerId') %}window._ti.customerId = '{{ context.customer.uniqueIdentifier }}';{% endif %}
             {% if mappInclude('eMailSubscription') %}window._ti.eMailSubscription = '{{ context.customer.newsletter ? 'true' : 'false' }}';{% endif %}
-            {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
 
             {% if activeRoute == 'frontend.home.page' %}
                 {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Home';{% endif %}
@@ -72,6 +71,7 @@
                 {% if mappInclude('productName') %}window._ti.productName = '{{ page.product.translated.name }}';{% endif %}
                 {% if mappInclude('productQuantity') %}window._ti.productQuantity = '1';{% endif %}
                 {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'view';{% endif %}
+                {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
                 {% if mappInclude('productCategories') %}window._ti.productCategories = JSON.parse('{{ getCategoryNames(page.product.categoryTree)|json_encode|raw }}');{% endif %}
                 if(window._ti.productCategories && window._ti.productCategories[0]) {
                     {% if mappInclude('productCategory') %}window._ti.productCategory = window._ti.productCategories[0];{% endif %}
@@ -86,23 +86,43 @@
                 {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'conf';{% endif %}
                 {% if mappInclude('orderId') %}window._ti.orderId = '{{ page.order.orderNumber }}';{% endif %}
                 {% if mappInclude('totalOrderValue') %}window._ti.totalOrderValue = '{{ page.order.amountTotal }}';{% endif %}
+                {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
                 {% if mappInclude('affiliateCode') and page.order.affiliateCode %}window._ti.affiliateCode = '{{ page.order.affiliateCode }}';{% endif %}
                 {% if mappInclude('campaignCode') and page.order.campaignCode %}window._ti.campaignCode = '{{ page.order.campaignCode }}';{% endif %}
                 {% if mappInclude('products') %}window._ti.products = [];{% endif %}
 
                 {% for product in page.order.lineItems %}
-                    if(window._ti.products) {
-                        window._ti.products[{{ loop.index0 }}] = {};
-                        {% if mappInclude('productCost') %}window._ti.products[{{ loop.index0 }}].productCost = "{{ product.price.unitPrice }}";{% endif %}
-                        {% if mappInclude('productId') %}window._ti.products[{{ loop.index0 }}].productId = "{{ product.payload.productNumber }}";{% endif %}
-                        {% if mappInclude('productShopwareId') %}window._ti.products[{{ loop.index0 }}].productShopwareId = "{{ product.productId }}";{% endif %}
-                        {% if mappInclude('productName') %}window._ti.products[{{ loop.index0 }}].productName = "{{ product.label }}";{% endif %}
-                        {% if mappInclude('productQuantity') %}window._ti.products[{{ loop.index0 }}].productQuantity = "{{ product.quantity }}";{% endif %}
-                        {% if mappInclude('productCategories') %}window._ti.products[{{ loop.index0 }}].productCategories = JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|raw }}');{% endif %}
-                    }
+                    {% if product.type == 'promotion' and product.totalPrice %}
+                        {% if mappInclude('couponValue') %}
+                            if(window._ti.couponValue) {
+                                window._ti.couponValue = parseFloat(window._ti.couponValue) + {{ product.totalPrice * -1 }} + '';
+                            } else {
+                                window._ti.couponValue = {{ product.totalPrice * -1 }} + '';
+                            }
+                        {% endif %}
+                    {% else %}
+                        if(window._ti.products) {
+                            window._ti.products[{{ loop.index0 }}] = {};
+                            {% if mappInclude('productCost') %}window._ti.products[{{ loop.index0 }}].productCost = "{{ product.price.unitPrice }}";{% endif %}
+                            {% if mappInclude('productId') %}window._ti.products[{{ loop.index0 }}].productId = "{{ product.payload.productNumber }}";{% endif %}
+                            {% if mappInclude('productShopwareId') %}window._ti.products[{{ loop.index0 }}].productShopwareId = "{{ product.productId }}";{% endif %}
+                            {% if mappInclude('productName') %}window._ti.products[{{ loop.index0 }}].productName = "{{ product.label }}";{% endif %}
+                            {% if mappInclude('productQuantity') %}window._ti.products[{{ loop.index0 }}].productQuantity = "{{ product.quantity }}";{% endif %}
+                            {% if mappInclude('productCategories') %}window._ti.products[{{ loop.index0 }}].productCategories = JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|raw }}');{% endif %}
+                        }
+                    {% endif %}
                 {% endfor %}
 
                 if(window._ti.products) {
+                    (function(){
+                        var _p = []; // re-index in case of promotions
+                        for(var i = 0; i < window._ti.products.length; i++) {
+                            if(window._ti.products[i] !== undefined) {
+                                _p.push(window._ti.products[i]);
+                            }
+                        }
+                        window._ti.products = _p;
+                    }());
                     (function(){
                         var productKeys = (function(obj) {
                             var r = [];

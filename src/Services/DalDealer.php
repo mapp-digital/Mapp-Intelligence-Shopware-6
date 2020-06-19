@@ -27,6 +27,9 @@ class DalDealer implements DalDealerInterface {
     }
 
     public function getCategoryNames($categoryIds): ?array {
+        if($categoryIds === null) {
+            return array();
+        }
         $output = array();
         $categoryNames = $this->categoryRepository->search(
             new Criteria($categoryIds),
