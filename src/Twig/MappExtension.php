@@ -19,8 +19,6 @@ class MappExtension extends AbstractExtension
     */
     private $dalDealer;
 
-    private $config;
-
     public function __construct(SystemConfigService $systemConfigService, DalDealer $dalDealer) {
         $this->systemConfigService = $systemConfigService;
         $this->dalDealer = $dalDealer;
@@ -30,6 +28,7 @@ class MappExtension extends AbstractExtension
     {
         return [
             new TwigFunction('getCategoryNames', [$this, 'getCategoryNames']),
+            new TwigFunction('getPageNumber', [$this, 'getPageNumber']),
             new TwigFunction('mappInclude', [$this, 'mappInclude'], ['needs_context' => true]),
         ];
     }
@@ -37,6 +36,11 @@ class MappExtension extends AbstractExtension
     public function getCategoryNames($ids)
     {
         return $this->dalDealer->getCategoryNames($ids);
+    }
+
+    public function getPageNumber()
+    {
+        return "(function(){var r=/(?:\?|&)p=([0-9]+)(?:&|$)/;var h=r.exec(location.href);return ((h && h[1])?h[1]:'1')}())";
     }
 
     public function mappInclude($context, $dataLayerKey)

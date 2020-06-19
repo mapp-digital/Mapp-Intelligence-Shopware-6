@@ -18,31 +18,8 @@ export default class MappIntelligenceClientEvents extends Plugin {
 
         var searchWidgets = window.PluginManager.getPluginInstances('SearchWidget');
         searchWidgets.forEach( (element) => {
-            element.$emitter.subscribe('handleInputEvent',  (event) => {
+            element.$emitter.subscribe('afterSuggest',  (event) => {
                 this.searchWidgetHandler(event);
-            });
-        });
-
-        const filterPlugins = [
-            'FilterBoolean',
-            'FilterMultiSelect',
-            'FilterPropertySelect',
-            'FilterRange',
-            'FilterRating'
-        ];
-        filterPlugins.forEach( (filterType) => {
-            var filters = window.PluginManager.getPluginInstances(filterType);
-            filters.forEach( (element) => {
-                element.$emitter.subscribe('change',  (event) => {
-                    this.filterHandler(event, filterType);
-                });
-            });
-        });
-
-        var filters = window.PluginManager.getPluginInstances('FilterRange');
-        filters.forEach( (element) => {
-            element.$emitter.subscribe('change',  (event) => {
-                this.filterHandler(event);
             });
         });
         var addToCarts = window.PluginManager.getPluginInstances('AddToCart');
@@ -62,34 +39,25 @@ export default class MappIntelligenceClientEvents extends Plugin {
             sorting = event.target.options[selectedFilterOption].innerText;
         }
         if(page) {
-            console.log('MAPP -> switch page: ', page)
+            if(window.wts && window._ti.pageNumber) {
+                window._ti.pageNumber = page;
+                window.wts.push(['send', 'pageupdate']);
+            }
         } else if (sorting) {
-            console.log('MAPP -> switch sorting: ', sorting)
+            if(window.wts) {
+                window.wts.push(['send', 'click', { linkId: 'Sorting: ' + sorting }]);
+            }
         }
     }
 
-    filterHandler(event, filterType) {
-        const output = { filterType };
-        switch (filterType) {
-            case 'FilterBoolean':
-                break;
-            case 'FilterMultiSelect':
-            case 'FilterPropertySelect':
-                output.filterValue = event.target.dataset.label;
-                break;
-            case 'FilterRange':
-                break;
-            case 'FilterRating':
-                break;
-        }
-
-        if(filterType) { // will be undefined when using range
-            // TODO implement filters
+    searchWidgetHandler() {
+        if(window.wts) {
+            window.wts.push('linkTrackInstall');
         }
     }
 
     addToCartHandler(event) {
-        var trackingData = {...DomAccess.querySelector(event.target, '.mapp-tracking-data', true).dataset};
+        var trackingData = { ...DomAccess.querySelector(event.target, '.mapp-tracking-data', true).dataset };
         if(trackingData.productQuantity) {
             trackingData.productQuantity = event.target.elements['lineItems[' + trackingData.productShopwareId + '][quantity]'].value;
         }
@@ -106,11 +74,8 @@ export default class MappIntelligenceClientEvents extends Plugin {
             }
         }
         window._ti = {...window._ti, ...trackingData}
-        console.log('MAPP -> add-to-cart data -> ', window._ti);
-    }
-
-    searchWidgetHandler(event) {
-        console.log('Search widget handleInputEvent', event);
-        // TODO update linktracking
+        if(window.wts) {
+            window.wts.push(['send', 'pageupdate']);
+        }
     }
 }

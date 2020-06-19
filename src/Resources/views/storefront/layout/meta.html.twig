@@ -22,19 +22,45 @@
             {% if mappInclude('eMailSubscription') %}window._ti.eMailSubscription = '{{ context.customer.newsletter ? 'true' : 'false' }}';{% endif %}
             {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
 
+            {% if activeRoute == 'frontend.home.page' %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Home';{% endif %}
+                {% if mappInclude('pageTitle') %}window._ti.pageTitle = '{{ page.cmsPage.name }}';{% endif %}
+                {% if page.cmsPage.type == 'product_list' %}
+                    {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Product Overview';{% endif %}
+                    {% if mappInclude('pageNumber') %}window._ti.pageNumber = {{ getPageNumber()|raw }};{% endif %}
+                {% endif %}
+            {% endif %}
+
             {% if activeRoute == 'frontend.navigation.page' %}
-                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Content';{% endif %}
                 {% if mappInclude('pageTitle') %}window._ti.pageTitle = '{{ page.cmsPage.name }}';{% endif %}
                 {% if page.cmsPage.type == 'landingpage' %}
-                    {% if mappInclude('contentSubCategory') %}window._ti.contentSubCategory = 'Landing Page';{% endif %}
+                    {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Content';{% endif %}
+                    {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Landing Page';{% endif %}
+                {% endif %}
+                {% if page.cmsPage.type == 'product_list' %}
+                    {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Catalogue';{% endif %}
+                    {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Product Overview';{% endif %}
+                    {% if mappInclude('pageNumber') %}window._ti.pageNumber = {{ getPageNumber()|raw }};{% endif %}
+                {% endif %}
+                {% if page.cmsPage.type == 'page' %}
+                    {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Content';{% endif %}
                 {% endif %}
             {% endif %}
 
             {% if activeRoute == 'frontend.search.page' %}
-            {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Catalogue';{% endif %}
-            {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Internal Search';{% endif %}
-            {% if mappInclude('searchTerm') %}window._ti.searchTerm = '{{ page.searchTerm }}';{% endif %}
-            {% if mappInclude('numberOfSearchResults') %}window._ti.numberOfSearchResults = '{{ page.searchResult.total }}';{% endif %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Catalogue';{% endif %}
+                {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Internal Search';{% endif %}
+                {% if mappInclude('pageNumber') %}window._ti.pageNumber = {{ getPageNumber()|raw }};{% endif %}
+                {% if mappInclude('searchTerm') %}window._ti.searchTerm = '{{ page.searchTerm }}';{% endif %}
+                {% if mappInclude('numberOfSearchResults') %}window._ti.numberOfSearchResults = '{{ page.searchResult.total }}';{% endif %}
+            {% endif %}
+
+            {% if 'frontend.account' in activeRoute %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Account';{% endif %}
+            {% endif %}
+
+            {% if controllerAction == 'checkoutRegisterPage' or controllerAction == 'confirmPage'  %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Checkout';{% endif %}
             {% endif %}
 
             {% if activeRoute == 'frontend.detail.page' %}
@@ -54,77 +80,80 @@
                     {% if mappInclude('productSubCategory') %}window._ti.productSubCategory = window._ti.productCategories[1];{% endif %}
                 }
             {% endif %}
+
             {% if activeRoute == 'frontend.checkout.finish.page' %}
                 {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Checkout';{% endif %}
                 {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'conf';{% endif %}
                 {% if mappInclude('orderId') %}window._ti.orderId = '{{ page.order.orderNumber }}';{% endif %}
                 {% if mappInclude('totalOrderValue') %}window._ti.totalOrderValue = '{{ page.order.amountTotal }}';{% endif %}
+                {% if mappInclude('affiliateCode') and page.order.affiliateCode %}window._ti.affiliateCode = '{{ page.order.affiliateCode }}';{% endif %}
+                {% if mappInclude('campaignCode') and page.order.campaignCode %}window._ti.campaignCode = '{{ page.order.campaignCode }}';{% endif %}
                 {% if mappInclude('products') %}window._ti.products = [];{% endif %}
 
-
-                    {% for product in page.order.lineItems %}
-                        if(window._ti.products) {
-                            window._ti.products[{{ loop.index0 }}] = {};
-                            {% if mappInclude('productCost') %}window._ti.products[{{ loop.index0 }}].productCost = "{{ product.price.unitPrice }}";{% endif %}
-                            {% if mappInclude('productId') %}window._ti.products[{{ loop.index0 }}].productId = "{{ product.payload.productNumber }}";{% endif %}
-                            {% if mappInclude('productShopwareId') %}window._ti.products[{{ loop.index0 }}].productShopwareId = "{{ product.productId }}";{% endif %}
-                            {% if mappInclude('productName') %}window._ti.products[{{ loop.index0 }}].productName = "{{ product.label }}";{% endif %}
-                            {% if mappInclude('productQuantity') %}window._ti.products[{{ loop.index0 }}].productQuantity = "{{ product.quantity }}";{% endif %}
-                            {% if mappInclude('productCategories') %}window._ti.products[{{ loop.index0 }}].productCategories = JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|raw }}');{% endif %}
-                        }
-                    {% endfor %}
-            (function(){
-                var productKeys = (function(obj) {
-                    var r = [];
-                    for (var k in obj) {
-                        if (!obj.hasOwnProperty(k)) {
-                            continue;
-                        }
-                        r.push(k);
+                {% for product in page.order.lineItems %}
+                    if(window._ti.products) {
+                        window._ti.products[{{ loop.index0 }}] = {};
+                        {% if mappInclude('productCost') %}window._ti.products[{{ loop.index0 }}].productCost = "{{ product.price.unitPrice }}";{% endif %}
+                        {% if mappInclude('productId') %}window._ti.products[{{ loop.index0 }}].productId = "{{ product.payload.productNumber }}";{% endif %}
+                        {% if mappInclude('productShopwareId') %}window._ti.products[{{ loop.index0 }}].productShopwareId = "{{ product.productId }}";{% endif %}
+                        {% if mappInclude('productName') %}window._ti.products[{{ loop.index0 }}].productName = "{{ product.label }}";{% endif %}
+                        {% if mappInclude('productQuantity') %}window._ti.products[{{ loop.index0 }}].productQuantity = "{{ product.quantity }}";{% endif %}
+                        {% if mappInclude('productCategories') %}window._ti.products[{{ loop.index0 }}].productCategories = JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|raw }}');{% endif %}
                     }
-                    return r;
-                })(_ti.products[0]);
-                for(var i = 0; i < productKeys.length; i++) {
-                    var productKey = productKeys[i];
-                    window._ti[productKey] = '';
-                    for(var j = 0; j < window._ti.products.length; j++) {
-                        var product = window._ti.products[j];
-                        if(typeof product[productKey] === 'string') {
-                            window._ti[productKey] += (j > 0 ? ';': '') + product[productKey];
-                        } else if(Object.prototype.toString.call(product[productKey]) === "[object Array]") {
-                            window._ti[productKey] = window._ti[productKey] || [];
-                            var maxLength = (function(products) { //
-                                var maxLength = 0;
-                                for(var k = 0; k < products.length; k++) {
-                                    if(maxLength < products[k][productKey].length) {
-                                        maxLength = products[k][productKey].length;
+                {% endfor %}
+
+                if(window._ti.products) {
+                    (function(){
+                        var productKeys = (function(obj) {
+                            var r = [];
+                            for (var k in obj) {
+                                if (!obj.hasOwnProperty(k)) {
+                                    continue;
+                                }
+                                r.push(k);
+                            }
+                            return r;
+                        })(window._ti.products[0]);
+                        for(var i = 0; i < productKeys.length; i++) {
+                            var productKey = productKeys[i];
+                            window._ti[productKey] = '';
+                            for(var j = 0; j < window._ti.products.length; j++) {
+                                var product = window._ti.products[j];
+                                if(typeof product[productKey] === 'string') {
+                                    window._ti[productKey] += (j > 0 ? ';': '') + product[productKey];
+                                } else if(Object.prototype.toString.call(product[productKey]) === "[object Array]") {
+                                    window._ti[productKey] = window._ti[productKey] || [];
+                                    var maxLength = (function(products) { //
+                                        var maxLength = 0;
+                                        for(var k = 0; k < products.length; k++) {
+                                            if(maxLength < products[k][productKey].length) {
+                                                maxLength = products[k][productKey].length;
+                                            }
+                                        }
+                                        return maxLength;
+                                    })(window._ti.products);
+                                    if(j === 0) {
+                                        for(var k = 0; k < maxLength; k++) { //init
+                                            window._ti[productKey][k] = '';
+                                        }
+                                    }
+                                    for(k = 0; k < maxLength; k++) { // add values
+                                        window._ti[productKey][k] = window._ti[productKey][k] +
+                                            (j > 0 ? ';' : '') +
+                                            (product[productKey][k] !== undefined ? product[productKey][k] : '');
                                     }
                                 }
-                                return maxLength;
-                            })(window._ti.products);
-                            if(j === 0) {
-                                for(var k = 0; k < maxLength; k++) { //init
-                                    window._ti[productKey][k] = '';
-                                }
-                            }
-                            for(k = 0; k < maxLength; k++) { // add values
-                                window._ti[productKey][k] = window._ti[productKey][k] +
-                                    (j > 0 ? ';' : '') +
-                                    (product[productKey][k] !== undefined ? product[productKey][k] : '');
                             }
                         }
-                    }
+                    })();
                 }
-            })();
-            if(window._ti.productCategories && window._ti.productCategories[0]) {
-                {% if mappInclude('productCategory') %}window._ti.productCategory = window._ti.productCategories[0];{% endif %}
-            }
-            if(window._ti.productCategories && window._ti.productCategories[1]) {
-                {% if mappInclude('productSubCategory') %}window._ti.productSubCategory = window._ti.productCategories[1];{% endif %}
-            }
+                if(window._ti.productCategories && window._ti.productCategories[0]) {
+                    {% if mappInclude('productCategory') %}window._ti.productCategory = window._ti.productCategories[0];{% endif %}
+                }
+                if(window._ti.productCategories && window._ti.productCategories[1]) {
+                    {% if mappInclude('productSubCategory') %}window._ti.productSubCategory = window._ti.productCategories[1];{% endif %}
+                }
             {% endif %}
-
-
         </script>
 
 {#        {{ dump() }}#}
