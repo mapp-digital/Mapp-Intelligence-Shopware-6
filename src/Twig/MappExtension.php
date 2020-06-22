@@ -30,7 +30,8 @@ class MappExtension extends AbstractExtension
             new TwigFunction('getCategoryNames', [$this, 'getCategoryNames']),
             new TwigFunction('getPageNumber', [$this, 'getPageNumber']),
             new TwigFunction('mappInclude', [$this, 'mappInclude'], ['needs_context' => true]),
-            new TwigFunction('getGender', [$this, 'getGender'])
+            new TwigFunction('getGender', [$this, 'getGender']),
+            new TwigFunction('getAge', [$this, 'getAge']),
         ];
     }
 
@@ -53,6 +54,11 @@ class MappExtension extends AbstractExtension
             default:
                 return 0;
         }
+    }
+
+    public function getAge($date) {
+        $now = new \DateTime();
+        return $now->diff($date)->format('%Y');
     }
 
     public function getPageNumber()
