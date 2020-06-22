@@ -23,6 +23,30 @@ export default class MappIntelligenceClientEvents extends Plugin {
             });
         });
 
+        const filterPlugins = [
+            'FilterBoolean',
+            'FilterMultiSelect',
+            'FilterPropertySelect',
+            'FilterRange',
+            'FilterRating'
+        ];
+        filterPlugins.forEach( (filterType) => {
+            var filters = window.PluginManager.getPluginInstances(filterType);
+            filters.forEach( (element) => {
+                element.$emitter.subscribe('change',  () => {
+                    this.updateAddToCart();
+                    const resetButton = document.querySelector('.filter-reset-all');
+                    if(resetButton) {
+                        setTimeout(() => {
+                            resetButton.addEventListener('click', () => {
+                                this.updateAddToCart();
+                            });
+                        },500);
+                    }
+                });
+            });
+        });
+
         this.subscribeAddToCart();
     }
 
@@ -35,6 +59,20 @@ export default class MappIntelligenceClientEvents extends Plugin {
         });
     }
 
+    updateAddToCart() {
+        var oldAddToCartLength = window.PluginManager.getPluginInstances('AddToCart').length;
+        var intervalId = setInterval(() => {
+            var currentAddToCartAmounts = window.PluginManager.getPluginInstances('AddToCart').length;
+            if(currentAddToCartAmounts !== oldAddToCartLength) {
+                this.subscribeAddToCart();
+                clearInterval(intervalId);
+            }
+        },500);
+    }
+
+
+
+
     paginationHandler(event) {
         const page = event.target.getAttribute('value');
 
@@ -43,18 +81,11 @@ export default class MappIntelligenceClientEvents extends Plugin {
             const selectedFilterOption = event.target.options.selectedIndex;
             sorting = event.target.options[selectedFilterOption].innerText;
         }
+        this.updateAddToCart();
         if(page) {
             if(window.wts && window._ti.pageNumber) {
                 window._ti.pageNumber = page;
                 window.wts.push(['send', 'pageupdate']);
-                var oldAddToCartLength = window.PluginManager.getPluginInstances('AddToCart').length;
-                var intervalId = setInterval(() => {
-                    var currentAddToCartAmounts = window.PluginManager.getPluginInstances('AddToCart').length;
-                    if(currentAddToCartAmounts !== oldAddToCartLength) {
-                        this.subscribeAddToCart();
-                        clearInterval(intervalId);
-                    }
-                },500);
             }
         } else if (sorting) {
             if(window.wts) {
