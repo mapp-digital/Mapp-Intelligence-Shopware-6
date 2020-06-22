@@ -30,12 +30,29 @@ class MappExtension extends AbstractExtension
             new TwigFunction('getCategoryNames', [$this, 'getCategoryNames']),
             new TwigFunction('getPageNumber', [$this, 'getPageNumber']),
             new TwigFunction('mappInclude', [$this, 'mappInclude'], ['needs_context' => true]),
+            new TwigFunction('getGender', [$this, 'getGender'])
         ];
     }
 
     public function getCategoryNames($ids)
     {
         return $this->dalDealer->getCategoryNames($ids);
+    }
+
+    public function getGender($genderKey)
+    {
+        switch ($genderKey) {
+            case 'mr':
+            case 'herr':
+                return 1;
+            case 'ms':
+            case 'mrs':
+            case 'miss':
+            case 'frau':
+                return 2;
+            default:
+                return 0;
+        }
     }
 
     public function getPageNumber()

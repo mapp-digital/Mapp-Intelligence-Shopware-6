@@ -23,6 +23,7 @@
             {% if context.customer != null %}
                 {% if mappInclude('customerId') %}window._ti.customerId = '{{ context.customer.id }}';{% endif %}
                 {% if mappInclude('eMailSubscription') %}window._ti.eMailSubscription = '{{ context.customer.newsletter ? 'true' : 'false' }}';{% endif %}
+                {% if mappInclude('gender') %}window._ti.gender = '{{ getGender(context.customer.salutation.salutationKey) }}';{% endif %}
             {% endif %}
 
             {% if activeRoute == 'frontend.home.page' %}
