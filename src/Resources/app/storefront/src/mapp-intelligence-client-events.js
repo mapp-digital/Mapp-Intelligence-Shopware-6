@@ -103,7 +103,7 @@ export default class MappIntelligenceClientEvents extends Plugin {
     addToCartHandler(event) {
         var backup = JSON.stringify(window._ti);
         var trackingData = { ...DomAccess.querySelector(event.target, '.mapp-tracking-data', true).dataset };
-        if(trackingData.productQuantity) {
+        if(trackingData.productQuantity && trackingData.productShopwareId) {
             trackingData.productQuantity = event.target.elements['lineItems[' + trackingData.productShopwareId + '][quantity]'].value;
         }
         if(trackingData.productCost && trackingData.productQuantity) {

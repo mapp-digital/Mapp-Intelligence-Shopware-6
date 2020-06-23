@@ -20,7 +20,7 @@
             <label lang="de-DE">tiDomain</label>
             <label>tiDomain</label>
             <helpText lang="de-DE">tiDomain eingeben</helpText>
-            <helpText>Enter your tiId</helpText>
+            <helpText>Enter your tiDomain or keep empty, if you don't have your own tiDomain</helpText>
             <placeholder lang="de-DE">responder.wt-safetag.com</placeholder>
             <placeholder>responder.wt-safetag.com</placeholder>
             <copyable>true</copyable>

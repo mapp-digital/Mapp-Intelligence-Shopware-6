@@ -5,5 +5,5 @@
     {% if mappInclude('productCost') %}data-product-cost="{{ product.CalculatedListingPrice.to.totalPrice }}"{% endif %}
     {% if mappInclude('productCategories') %}data-product-categories="{{ getCategoryNames(product.categoryTree)|json_encode|e('html_attr') }}"{% endif %}
     {% if mappInclude('shoppingCartStatus') %}data-shopping-cart-status="add"{% endif %}
-    {% if mappInclude('productQuantity') %}data-product-quantity="0"{% endif %}
+    {% if mappInclude('productQuantity') %}data-product-quantity="1"{% endif %}
 ></div>
