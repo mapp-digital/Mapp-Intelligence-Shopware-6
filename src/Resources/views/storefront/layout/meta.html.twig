@@ -22,7 +22,7 @@
 
             {% if context.customer != null %}
                 {% if mappInclude('customerId') %}window._ti.customerId = '{{ context.customer.id }}';{% endif %}
-                {% if mappInclude('eMailSubscription') %}window._ti.eMailSubscription = '{{ context.customer.newsletter ? 'true' : 'false' }}';{% endif %}
+                {% if mappInclude('eMailSubscription') %}window._ti.eMailSubscription = '{{ context.customer.newsletter ? '1' : '2' }}';{% endif %}
                 {% if mappInclude('gender') and context.customer.salutation.salutationKey != null %}window._ti.gender = '{{ getGender(context.customer.salutation.salutationKey) }}';{% endif %}
                 {% if mappInclude('age') and context.customer.birthday != null %}window._ti.age = '{{ getAge(context.customer.birthday) }}';{% endif %}
             {% endif %}
