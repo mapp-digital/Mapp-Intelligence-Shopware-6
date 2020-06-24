@@ -76,6 +76,7 @@
                 {% if mappInclude('productName') %}window._ti.productName = '{{ page.product.translated.name }}';{% endif %}
                 {% if mappInclude('productQuantity') %}window._ti.productQuantity = '1';{% endif %}
                 {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'view';{% endif %}
+                {% if mappInclude('productSoldOut') %}window._ti.productSoldOut = '{{ page.product.availableStock <= 0 ? '1' : '' }}';{% endif %}
                 {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
                 {% if mappInclude('productCategories') %}window._ti.productCategories = JSON.parse('{{ getCategoryNames(page.product.categoryTree)|json_encode|raw }}');{% endif %}
                 if(window._ti.productCategories && window._ti.productCategories[0]) {
@@ -113,6 +114,7 @@
                             {% if mappInclude('productShopwareId') %}window._ti.products[{{ loop.index0 }}].productShopwareId = "{{ product.productId }}";{% endif %}
                             {% if mappInclude('productName') %}window._ti.products[{{ loop.index0 }}].productName = "{{ product.label }}";{% endif %}
                             {% if mappInclude('productQuantity') %}window._ti.products[{{ loop.index0 }}].productQuantity = "{{ product.quantity }}";{% endif %}
+                            {% if mappInclude('productSoldOut') %}window._ti.products[{{ loop.index0 }}].productSoldOut = '';{% endif %}
                             {% if mappInclude('productCategories') %}window._ti.products[{{ loop.index0 }}].productCategories = JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|raw }}');{% endif %}
                         }
                     {% endif %}
