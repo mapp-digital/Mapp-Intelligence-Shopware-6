@@ -7,5 +7,6 @@ interface DalDealerInterface
 
     public function getData($event): ?string;
     public function getCategoryNames($categoryIds): ?array;
+    public function getSoldOutStatus($id): string;
 
 }

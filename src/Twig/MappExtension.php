@@ -32,6 +32,7 @@ class MappExtension extends AbstractExtension
             new TwigFunction('mappInclude', [$this, 'mappInclude'], ['needs_context' => true]),
             new TwigFunction('getGender', [$this, 'getGender']),
             new TwigFunction('getAge', [$this, 'getAge']),
+            new TwigFunction('getSoldOutStatus', [$this, 'getSoldOutStatus'])
         ];
     }
 
@@ -61,6 +62,11 @@ class MappExtension extends AbstractExtension
         return $now->diff($date)->format('%Y');
     }
 
+    public function getSoldOutStatus($id)
+    {
+        return $this->dalDealer->getSoldOutStatus($id);
+    }
+
     public function getPageNumber()
     {
         return "(function(){var r=/(?:\?|&)p=([0-9]+)(?:&|$)/;var h=r.exec(location.href);return ((h && h[1])?h[1]:'1')}())";
@@ -70,6 +76,7 @@ class MappExtension extends AbstractExtension
     {
         $salesChannelId = $context['context']->getSalesChannel()->getId();
         $config = $this->systemConfigService->get('MappIntelligence.config',  $salesChannelId);
+        // TODO sanitize user input
         if(!isset($config['blacklist'])) {
             return true;
         } elseif (in_array($dataLayerKey, explode(',', $config['blacklist']))) {

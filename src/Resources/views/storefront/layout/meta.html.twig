@@ -114,7 +114,7 @@
                             {% if mappInclude('productShopwareId') %}window._ti.products[{{ loop.index0 }}].productShopwareId = "{{ product.productId }}";{% endif %}
                             {% if mappInclude('productName') %}window._ti.products[{{ loop.index0 }}].productName = "{{ product.label }}";{% endif %}
                             {% if mappInclude('productQuantity') %}window._ti.products[{{ loop.index0 }}].productQuantity = "{{ product.quantity }}";{% endif %}
-                            {% if mappInclude('productSoldOut') %}window._ti.products[{{ loop.index0 }}].productSoldOut = '';{% endif %}
+                            {% if mappInclude('productSoldOut') %}window._ti.products[{{ loop.index0 }}].productSoldOut = '{{ getSoldOutStatus(product.productId) }}';{% endif %}
                             {% if mappInclude('productCategories') %}window._ti.products[{{ loop.index0 }}].productCategories = JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|raw }}');{% endif %}
                         }
                     {% endif %}

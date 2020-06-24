@@ -41,6 +41,19 @@ class DalDealer implements DalDealerInterface {
         return $output;
     }
 
+    public function getSoldOutStatus($productId): string
+    {
+        if($productId === null) {
+            return '';
+        }
+        $stock = $this->productRepository->search(
+            new Criteria([$productId]),
+            \Shopware\Core\Framework\Context::createDefaultContext()
+        )->first()->getAvailableStock();
+
+        return $stock <= 0 ? "1": "";
+    }
+
     public function getData($event): ?string {
 
         $route = $event->getRequest()->attributes->get('_route');
