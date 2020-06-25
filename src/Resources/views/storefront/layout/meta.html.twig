@@ -55,7 +55,7 @@
                 {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Catalogue';{% endif %}
                 {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Internal Search';{% endif %}
                 {% if mappInclude('pageNumber') %}window._ti.pageNumber = {{ getPageNumber()|raw }};{% endif %}
-                {% if mappInclude('searchTerm') %}window._ti.searchTerm = '{{ page.searchTerm }}';{% endif %}
+                {% if mappInclude('internalSearch') %}window._ti.internalSearch = '{{ page.searchTerm }}';{% endif %}
                 {% if mappInclude('numberOfSearchResults') %}window._ti.numberOfSearchResults = '{{ page.searchResult.total }}';{% endif %}
             {% endif %}
 
