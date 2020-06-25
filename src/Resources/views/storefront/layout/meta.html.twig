@@ -78,7 +78,7 @@
                 {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'view';{% endif %}
                 {% if mappInclude('productSoldOut') %}window._ti.productSoldOut = '{{ page.product.availableStock <= 0 ? '1' : '' }}';{% endif %}
                 {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
-                {% if mappInclude('productCategories') %}window._ti.productCategories = JSON.parse('{{ getCategoryNames(page.product.categoryTree)|json_encode|raw }}');{% endif %}
+                {% if mappInclude('productCategories') %}window._ti.productCategories = JSON.parse('{{ getCategoryNames(page.product.categoryTree)|e('js')|json_encode|e('js') }}');{% endif %}
                 if(window._ti.productCategories && window._ti.productCategories[0]) {
                     {% if mappInclude('productCategory') %}window._ti.productCategory = window._ti.productCategories[0];{% endif %}
                 }
@@ -115,7 +115,7 @@
                             {% if mappInclude('productName') %}window._ti.products[{{ loop.index0 }}].productName = "{{ product.label|e('js') }}";{% endif %}
                             {% if mappInclude('productQuantity') %}window._ti.products[{{ loop.index0 }}].productQuantity = "{{ product.quantity }}";{% endif %}
                             {% if mappInclude('productSoldOut') %}window._ti.products[{{ loop.index0 }}].productSoldOut = '{{ getSoldOutStatus(product.productId|e('js')) }}';{% endif %}
-                            {% if mappInclude('productCategories') %}window._ti.products[{{ loop.index0 }}].productCategories = JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|raw }}');{% endif %}
+                            {% if mappInclude('productCategories') %}window._ti.products[{{ loop.index0 }}].productCategories = JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|e('js') }}');{% endif %}
                         }
                     {% endif %}
                 {% endfor %}
