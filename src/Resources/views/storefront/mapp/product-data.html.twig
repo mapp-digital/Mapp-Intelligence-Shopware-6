@@ -1,7 +1,7 @@
 <div class="mapp-tracking-data"
     {% if mappInclude('productShopwareId') %}data-product-shopware-id="{{ product.id }}"{% endif %}
-    {% if mappInclude('productId') %}data-product-id="{{ product.productNumber }}"{% endif %}
-    {% if mappInclude('productName') %}data-product-name="{{ product.translated.name }}"{% endif %}
+    {% if mappInclude('productId') %}data-product-id="{{ product.productNumber|e('js') }}"{% endif %}
+    {% if mappInclude('productName') %}data-product-name="{{ product.translated.name|e('js') }}"{% endif %}
     {% if mappInclude('productCost') %}data-product-cost="{{ product.CalculatedListingPrice.to.totalPrice }}"{% endif %}
     {% if mappInclude('productCategories') %}data-product-categories="{{ getCategoryNames(product.categoryTree)|json_encode|e('html_attr') }}"{% endif %}
     {% if mappInclude('shoppingCartStatus') %}data-shopping-cart-status="add"{% endif %}
