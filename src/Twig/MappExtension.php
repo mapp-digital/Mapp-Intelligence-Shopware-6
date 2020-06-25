@@ -76,10 +76,9 @@ class MappExtension extends AbstractExtension
     {
         $salesChannelId = $context['context']->getSalesChannel()->getId();
         $config = $this->systemConfigService->get('MappIntelligence.config',  $salesChannelId);
-        // TODO sanitize user input
         if(!isset($config['blacklist'])) {
             return true;
-        } elseif (in_array($dataLayerKey, explode(',', $config['blacklist']))) {
+        } elseif (in_array($dataLayerKey, explode(',', filter_var($config['blacklist'], FILTER_SANITIZE_STRING)))) {
             return false;
         }
         return true;
