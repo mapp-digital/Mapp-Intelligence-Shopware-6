@@ -120,8 +120,17 @@ export default class MappIntelligenceClientEvents extends Plugin {
         }
         window._ti = {...window._ti, ...trackingData}
         if(window.wts) {
-            window.wts.push(['send', 'pageupdate']);
+            if(window._ti.hasOwnProperty('contentSubcategory') && window._ti.contentSubcategory !== 'Product Detail') {
+                const backup2 = JSON.stringify(window._ti);
+                window._ti.shoppingCartStatus = 'view';
+                window._ti.productQuantity = '1';
+                window.wts.push(['send', 'pageupdate']);
+                window._ti = JSON.parse(backup2);
+            }
+            setTimeout( () => {
+                window.wts.push(['send', 'pageupdate']);
+                window._ti = JSON.parse(backup);
+            }, 50);
         }
-        window._ti = JSON.parse(backup);
     }
 }

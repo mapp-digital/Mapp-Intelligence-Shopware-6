@@ -7,4 +7,5 @@
     {% if mappInclude('shoppingCartStatus') %}data-shopping-cart-status="add"{% endif %}
     {% if mappInclude('productQuantity') %}data-product-quantity="1"{% endif %}
     {% if mappInclude('productSoldOut') %}data-product-sold-out="{{ product.availableStock <= 0 ? '1' : '' }}";{% endif %}
+    {% if mappInclude('pageRequestType') %}data-page-request-type="virtual";{% endif %}
 ></div>
