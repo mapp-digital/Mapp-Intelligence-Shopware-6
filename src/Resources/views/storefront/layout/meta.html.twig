@@ -16,7 +16,7 @@
 
     {% block _ti %}
         <script>
-            window._ti = {};
+            window._ti =  window._ti || {};
             {% if mappInclude('pageName') %}window._ti.pageName = location.host + location.pathname;{% endif %}
             {% if mappInclude('pageTitle') %}window._ti.pageTitle = '{{ metaInformation.metaTitle|e('js') }}';{% endif %}
 
