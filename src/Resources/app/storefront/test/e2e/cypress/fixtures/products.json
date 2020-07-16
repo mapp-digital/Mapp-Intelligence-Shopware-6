@@ -1,0 +1,26 @@
+{
+    "normal": {
+        "title": "Mapp Test Product - Normal",
+        "productNumber": "mappnormal",
+        "price": "1000.99",
+        "stock": "1000",
+        "categories": ["Music, Toys & Baby", "Beauty & Games"],
+        "saleschannel": "Storefront"
+    },
+    "soldout": {
+        "title": "Mapp Test Product - Soldout",
+        "productNumber": "mappsoldout",
+        "price": "99.99",
+        "stock": "0",
+        "categories": ["Music, Toys & Baby", "Beauty & Games"],
+        "saleschannel": "Storefront"
+    },
+    "variable": {
+        "title": "Mapp Test Product - Variable",
+        "productNumber": "mappvariable",
+        "price": "999.99",
+        "stock": "1000",
+        "categories": ["Music, Toys & Baby", "Beauty & Games"],
+        "saleschannel": "Storefront"
+    }
+}

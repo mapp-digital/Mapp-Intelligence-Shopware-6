@@ -8,12 +8,12 @@ describe('MappIntelligencePluginTests: Install and Config', () => {
             .then(() => {
                 cy.visit('/admin#/sw/plugin/index/list');
             });
-            cy.contains('Mapp Intelligence').should('be.visible');
-            cy.get('.sw-data-grid__body > tr').each( (el) => {
-                if(/^Mapp Intelligence/.test(el[0].innerText)) {
-                    _pluginRowNumber = el[0].className.slice(-1);
-                }
-            })
+        cy.contains('Mapp Intelligence').should('be.visible');
+        cy.get('.sw-data-grid__body > tr').each( (el) => {
+            if(/^Mapp Intelligence/.test(el[0].innerText)) {
+                _pluginRowNumber = el[0].className.slice(-1);
+            }
+        })
     });
 
     it('install plugin', () => {

@@ -1,5 +1,8 @@
 /**
  * Logs in as customer
+ * @memberOf Cypress.Chainable#
+ * @name loginAsCustomer
+ * @function
  * @param {Object} customer data
  */
 Cypress.Commands.add('loginAsCustomer', (customerData) => {
@@ -12,6 +15,9 @@ Cypress.Commands.add('loginAsCustomer', (customerData) => {
 
 /**
  * Creates a customer
+ * @memberOf Cypress.Chainable#
+ * @name createCustomer
+ * @function
  * @param {Object} customer data
  */
 Cypress.Commands.add('createCustomer', (customerData) => {

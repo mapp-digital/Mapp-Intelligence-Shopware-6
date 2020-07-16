@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@shopware-ag/e2e-testsuite-platform": "^1.2.7",
-    "cypress": "^4.9.0"
+    "cypress": "^4.10.0"
   },
   "devDependencies": {},
   "scripts": {
