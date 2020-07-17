@@ -15,12 +15,16 @@
         "categories": ["Music, Toys & Baby", "Beauty & Games"],
         "saleschannel": "Storefront"
     },
-    "variable": {
+    "variant": {
         "title": "Mapp Test Product - Variable",
         "productNumber": "mappvariable",
         "price": "999.99",
         "stock": "1000",
         "categories": ["Music, Toys & Baby", "Beauty & Games"],
-        "saleschannel": "Storefront"
+        "saleschannel": "Storefront",
+        "variant": {
+            "searchTerms": ["azure", "greenyellow", "darkorange"]
+        }
+
     }
 }
