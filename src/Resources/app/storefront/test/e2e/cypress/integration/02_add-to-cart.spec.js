@@ -1,3 +1,5 @@
+// / <reference types="Cypress" />
+
 describe('MappIntelligencePluginTests: Add-to-Cart', () => {
 
     it('datalayer during add-to-cart event', () => {

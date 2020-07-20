@@ -45,6 +45,8 @@ describe('MappIntelligencePluginTests: Homepage', () => {
         cy.get('.sorting.custom-select')
             .select('price-desc');
 
-        cy.get('@wts').should('be.calledWith', ['send', 'click', { linkId: 'Sorting: Price, descending' }]);
+        cy.get('@wts')
+            .should('be.calledWith', ['send', 'click', { linkId: 'Sorting: Price, descending' }])
+            .and('be.calledOnce');
     });
 });
