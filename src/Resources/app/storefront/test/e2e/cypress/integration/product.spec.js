@@ -11,7 +11,7 @@ describe('Product detail datalayer', () => {
     });
 
     it('normal product: view', () => {
-        cy.visit('/Mapp-Test-Product-Normal/mappnormal');
+        cy.visit('/Mapp-Test-Product-Normael/maeppnormal');
         let data;
         cy.window()
             .then((win) => {
@@ -22,13 +22,13 @@ describe('Product detail datalayer', () => {
                 expect(data.contentCategory).to.equal('Catalogue');
                 expect(data.contentSubcategory).to.equal('Product Detail');
                 expect(data.currency).to.equal('EUR');
-                expect(data.pageName).to.equal('localhost:8000/Mapp-Test-Product-Normal/mappnormal');
-                expect(data.pageTitle).to.equal('Mapp Test Product - Normal | mappnormal');
+                expect(data.pageName).to.equal('localhost:8000/Mapp-Test-Product-Normael/maeppnormal');
+                expect(data.pageTitle).to.equal('Mapp Test Product - Normäl | mäppnormal');
                 expect(data.productCategories).to.deep.equal(["Catalogue #1", "Movies", "Games & Garden", "Beauty & Games", "Music, Toys & Baby"]);
                 expect(data.productCategory).to.equal('Catalogue #1');
                 expect(data.productCost).to.equal('1000.99');
-                expect(data.productId).to.equal('mappnormal');
-                expect(data.productName).to.equal('Mapp Test Product - Normal');
+                expect(data.productId).to.equal('mäppnormal');
+                expect(data.productName).to.equal('Mapp Test Product - Normäl');
                 expect(data.productQuantity).to.equal('1');
                 expect(data.productShopwareId).to.match(/^[0-9a-f]{32}$/);
                 expect(data.productSoldOut).to.equal('');
@@ -45,26 +45,28 @@ describe('Product detail datalayer', () => {
             method: 'post'
         }).as('addToCart');
 
-        cy.visit('/Mapp-Test-Product-Normal/mappnormal');
+        cy.visit('/Mapp-Test-Product-Normael/maeppnormal');
         cy.window().then((win) => {
             wts = cy.stub(win.wts, 'push', () => {
                 const data = win._ti;
-                expect(data.pageRequestType).to.equal('virtual');
-                expect(data.contentCategory).to.equal('Catalogue');
-                expect(data.contentSubcategory).to.equal('Product Detail');
-                expect(data.currency).to.equal('EUR');
-                expect(data.pageName).to.equal('localhost:8000/Mapp-Test-Product-Normal/mappnormal');
-                expect(data.pageTitle).to.equal('Mapp Test Product - Normal | mappnormal');
-                expect(data.productCategories).to.deep.equal(["Catalogue #1", "Movies", "Games & Garden", "Beauty & Games", "Music, Toys & Baby"]);
-                expect(data.productCategory).to.equal('Catalogue #1');
-                expect(data.productCost).to.equal(5004.95);
-                expect(data.productId).to.equal('mappnormal');
-                expect(data.productName).to.equal('Mapp Test Product - Normal');
-                expect(data.productQuantity).to.equal('5');
-                expect(data.productShopwareId).to.match(/^[0-9a-f]{32}$/);
-                expect(data.productSoldOut).to.equal('');
-                expect(data.productSubCategory).to.equal('Movies');
-                expect(data.shoppingCartStatus).to.equal('add');
+                cy.should( () => {
+                    expect(data.pageRequestType).to.equal('virtual');
+                    expect(data.contentCategory).to.equal('Catalogue');
+                    expect(data.contentSubcategory).to.equal('Product Detail');
+                    expect(data.currency).to.equal('EUR');
+                    expect(data.pageName).to.equal('localhost:8000/Mapp-Test-Product-Normael/maeppnormal');
+                    expect(data.pageTitle).to.equal('Mapp Test Product - Normäl | mäppnormal');
+                    expect(data.productCategories).to.deep.equal(["Catalogue #1", "Movies", "Games & Garden", "Beauty & Games", "Music, Toys & Baby"]);
+                    expect(data.productCategory).to.equal('Catalogue #1');
+                    expect(data.productCost).to.equal(5004.95);
+                    expect(data.productId).to.equal('mäppnormal');
+                    expect(data.productName).to.equal('Mapp Test Product - Normäl');
+                    expect(data.productQuantity).to.equal('5');
+                    expect(data.productShopwareId).to.match(/^[0-9a-f]{32}$/);
+                    expect(data.productSoldOut).to.equal('');
+                    expect(data.productSubCategory).to.equal('Movies');
+                    expect(data.shoppingCartStatus).to.equal('add');
+                });
             }).as('wts');
         });
 
@@ -114,22 +116,24 @@ describe('Product detail datalayer', () => {
         cy.window().then((win) => {
             wts = cy.stub(win.wts, 'push', () => {
                 const data = win._ti;
-                expect(data.pageRequestType).to.equal('virtual');
-                expect(data.contentCategory).to.equal('Catalogue');
-                expect(data.contentSubcategory).to.equal('Product Detail');
-                expect(data.currency).to.equal('EUR');
-                expect(data.pageName).to.equal('localhost:8000/Mapp-Test-Product-Soldout/mappsoldout');
-                expect(data.pageTitle).to.equal('Mapp Test Product - Soldout | mappsoldout');
-                expect(data.productCategories).to.deep.equal(["Catalogue #1", "Movies", "Games & Garden", "Beauty & Games", "Music, Toys & Baby"]);
-                expect(data.productCategory).to.equal('Catalogue #1');
-                expect(data.productCost).to.equal(499.95);
-                expect(data.productId).to.equal('mappsoldout');
-                expect(data.productName).to.equal('Mapp Test Product - Soldout');
-                expect(data.productQuantity).to.equal('5');
-                expect(data.productShopwareId).to.match(/^[0-9a-f]{32}$/);
-                expect(data.productSoldOut).to.equal('1');
-                expect(data.productSubCategory).to.equal('Movies');
-                expect(data.shoppingCartStatus).to.equal('add');
+                cy.should( () => {
+                    expect(data.pageRequestType).to.equal('virtual');
+                    expect(data.contentCategory).to.equal('Catalogue');
+                    expect(data.contentSubcategory).to.equal('Product Detail');
+                    expect(data.currency).to.equal('EUR');
+                    expect(data.pageName).to.equal('localhost:8000/Mapp-Test-Product-Soldout/mappsoldout');
+                    expect(data.pageTitle).to.equal('Mapp Test Product - Soldout | mappsoldout');
+                    expect(data.productCategories).to.deep.equal(["Catalogue #1", "Movies", "Games & Garden", "Beauty & Games", "Music, Toys & Baby"]);
+                    expect(data.productCategory).to.equal('Catalogue #1');
+                    expect(data.productCost).to.equal(499.95);
+                    expect(data.productId).to.equal('mappsoldout');
+                    expect(data.productName).to.equal('Mapp Test Product - Soldout');
+                    expect(data.productQuantity).to.equal('5');
+                    expect(data.productShopwareId).to.match(/^[0-9a-f]{32}$/);
+                    expect(data.productSoldOut).to.equal('1');
+                    expect(data.productSubCategory).to.equal('Movies');
+                    expect(data.shoppingCartStatus).to.equal('add');
+                });
             }).as('wts');
         });
 
@@ -207,22 +211,24 @@ describe('Product detail datalayer', () => {
         cy.window().then((win) => {
             wts = cy.stub(win.wts, 'push', () => {
                 const data = win._ti;
-                expect(data.pageRequestType).to.equal('virtual');
-                expect(data.contentCategory).to.equal('Catalogue');
-                expect(data.contentSubcategory).to.equal('Product Detail');
-                expect(data.currency).to.equal('EUR');
-                expect(data.pageName).to.equal('localhost:8000/Mapp-Test-Product-Variable/mappvariable.3');
-                expect(data.pageTitle).to.equal('Mapp Test Product - Variable | darkorange | mappvariable.3');
-                expect(data.productCategories).to.deep.equal(["Catalogue #1", "Movies", "Games & Garden", "Beauty & Games", "Music, Toys & Baby"]);
-                expect(data.productCategory).to.equal('Catalogue #1');
-                expect(data.productCost).to.equal(4999.95);
-                expect(data.productId).to.equal('mappvariable.3');
-                expect(data.productName).to.equal('Mapp Test Product - Variable');
-                expect(data.productQuantity).to.equal('5');
-                expect(data.productShopwareId).to.match(/^[0-9a-f]{32}$/);
-                expect(data.productSoldOut).to.equal('1');
-                expect(data.productSubCategory).to.equal('Movies');
-                expect(data.shoppingCartStatus).to.equal('add');
+                cy.should( () => {
+                    expect(data.pageRequestType).to.equal('virtual');
+                    expect(data.contentCategory).to.equal('Catalogue');
+                    expect(data.contentSubcategory).to.equal('Product Detail');
+                    expect(data.currency).to.equal('EUR');
+                    expect(data.pageName).to.equal('localhost:8000/Mapp-Test-Product-Variable/mappvariable.3');
+                    expect(data.pageTitle).to.equal('Mapp Test Product - Variable | darkorange | mappvariable.3');
+                    expect(data.productCategories).to.deep.equal(["Catalogue #1", "Movies", "Games & Garden", "Beauty & Games", "Music, Toys & Baby"]);
+                    expect(data.productCategory).to.equal('Catalogue #1');
+                    expect(data.productCost).to.equal(4999.95);
+                    expect(data.productId).to.equal('mappvariable.3');
+                    expect(data.productName).to.equal('Mapp Test Product - Variable');
+                    expect(data.productQuantity).to.equal('5');
+                    expect(data.productShopwareId).to.match(/^[0-9a-f]{32}$/);
+                    expect(data.productSoldOut).to.equal('1');
+                    expect(data.productSubCategory).to.equal('Movies');
+                    expect(data.shoppingCartStatus).to.equal('add');
+                });
             }).as('wts');
         });
 

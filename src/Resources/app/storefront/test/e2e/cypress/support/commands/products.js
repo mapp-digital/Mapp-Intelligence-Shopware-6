@@ -50,6 +50,7 @@ Cypress.Commands.add('createProduct', (productData) => {
         cy.contains('Actions performed according to current configuration:').should('be.visible');
         cy.get('.sw-modal__footer button.sw-button--primary').eq(1).click();
         cy.wait('@propertyGroup');
+        cy.wait(2000);
     }
 
 

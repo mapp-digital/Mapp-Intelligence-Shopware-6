@@ -1,7 +1,7 @@
 {
     "normal": {
-        "title": "Mapp Test Product - Normal",
-        "productNumber": "mappnormal",
+        "title": "Mapp Test Product - Normäl",
+        "productNumber": "mäppnormal",
         "price": "1000.99",
         "stock": "1000",
         "categories": ["Music, Toys & Baby", "Beauty & Games"],
