@@ -8,14 +8,29 @@ describe('Order tracking', () => {
            });
        cy.get('#sw-field--promotion-name').clear().type('mapp-test-promotion');
        cy.get('input[name=sw-field--promotion-active]').check();
-       cy.get('input.sw-select-selection-list__input').eq(0).type('storefront{enter}', {force: true});
+       cy.get('input[placeholder="Add Sales Channel..."').click();
+       cy.get('li.sw-select-result')
+           .should('be.visible')
+           .each( (el) => {
+               const channelName = el.find('.sw-select-result__result-item-text').innerText;
+               if(channelName === 'Storefront') {
+                   return el;
+               }
+           })
+           .then( (el) => {
+               el.trigger('click');
+               cy.wait(500);
+           });
        cy.get('input[name=sw-field--promotion-useCodes]').check();
        cy.get('#sw-field--promotion-code').clear().type('mapptest');
        cy.contains('Save').click();
        cy.wait(2000);
        cy.contains('Discounts').click();
        cy.contains('Add discount').should('be.visible').click();
-       cy.get('input[placeholder="Enter either a percentage or an absolute value..."]').clear().type('10');
+       cy.get('input[placeholder="Enter either a percentage or an absolute value..."]')
+           .clear()
+           .wait(500)
+           .type('10');
        cy.contains('Save').click();
        cy.wait(2000);
        cy.visit('/admin#/sw/promotion/index');
@@ -69,10 +84,8 @@ describe('Order tracking', () => {
                expect(data.pageTitle).to.equal('Demostore');
                expect(data.productCategories).to.deep.equal([
                    "Catalogue #1;Catalogue #1",
-                   "Movies;Movies",
-                   "Games & Garden;Games & Garden",
-                   "Beauty & Games;Beauty & Games",
-                   "Music, Toys & Baby;Music, Toys & Baby"
+                   "mapp-test;mapp-test",
+                   "mapp-subcategory;mapp-subcategory"
                ]);
                expect(data.productCategory).to.equal('Catalogue #1;Catalogue #1');
                expect(data.productCost).to.equal('999.99;1000.99');
@@ -81,7 +94,7 @@ describe('Order tracking', () => {
                expect(data.productQuantity).to.equal('3;5');
                expect(data.productShopwareId).to.match(/^[0-9a-f]{32};[0-9a-f]{32}$/);
                expect(data.productSoldOut).to.equal('1;');
-               expect(data.productSubCategory).to.equal('Movies;Movies');
+               expect(data.productSubCategory).to.equal('mapp-test;mapp-test');
                expect(data.shoppingCartStatus).to.equal('conf');
                expect(data.totalOrderValue).to.equal('7204.43');
            });

@@ -34,7 +34,7 @@ describe('Landingpage datalayer', () => {
        cy.wait('@updateCMSPage');
    });
 
-   it('create landingpage category and assign it to imprint', () => {
+   it('create mapp-test category and assign it to imprint', () => {
        let imprintRowNumber;
        const _r = /^Imprint$/;
        cy.loginViaApi()
@@ -43,8 +43,8 @@ describe('Landingpage datalayer', () => {
            });
        cy.get('.sw-context-button__button').click();
        cy.contains('New subcategory').should('be.visible').click();
-       cy.get('input[placeholder="Create category"').type('landingpage{enter}');
-       cy.contains('landingpage').should('be.visible').click();
+       cy.get('input[placeholder="Create category"').type('mapp-test{enter}');
+       cy.contains('mapp-test').should('be.visible').click();
        cy.get('input[name=categoryActive]').should('be.visible').check();
        cy.contains('Assign layout').should('be.visible').click();
        cy.get('div.sw-container > div.sw-cms-layout-modal__content-item')
@@ -67,7 +67,7 @@ describe('Landingpage datalayer', () => {
    });
 
    it('datalayer on landingpage', () => {
-       cy.visit('/landingpage/');
+       cy.visit('/mapp-test/');
        let data;
        cy.window()
            .then((win) => {

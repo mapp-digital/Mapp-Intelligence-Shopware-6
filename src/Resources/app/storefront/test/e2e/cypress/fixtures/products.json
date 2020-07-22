@@ -4,7 +4,7 @@
         "productNumber": "mäppnormal",
         "price": "1000.99",
         "stock": "1000",
-        "categories": ["Music, Toys & Baby", "Beauty & Games"],
+        "categories": ["mapp-subcategory"],
         "saleschannel": "Storefront"
     },
     "soldout": {
@@ -12,7 +12,7 @@
         "productNumber": "mappsoldout",
         "price": "99.99",
         "stock": "0",
-        "categories": ["Music, Toys & Baby", "Beauty & Games"],
+        "categories": ["mapp-subcategory"],
         "saleschannel": "Storefront"
     },
     "variant": {
@@ -20,7 +20,7 @@
         "productNumber": "mappvariable",
         "price": "999.99",
         "stock": "1000",
-        "categories": ["Music, Toys & Baby", "Beauty & Games"],
+        "categories": ["mapp-subcategory"],
         "saleschannel": "Storefront",
         "variant": {
             "searchTerms": ["azure", "greenyellow", "darkorange"]

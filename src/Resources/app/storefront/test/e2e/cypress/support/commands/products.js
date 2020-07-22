@@ -16,19 +16,27 @@ Cypress.Commands.add('createProduct', (productData) => {
         method: 'post'
     }).as('propertyGroup');
 
-
-
     cy.loginViaApi()
         .then(() => {
             cy.visit('/admin#/sw/product/index');
         });
     cy.contains('Add product').click();
+    cy.get('input[placeholder="Select Sales Channel..."').click();
+    cy.get('li.sw-select-result')
+        .should('be.visible')
+        .each( (el) => {
+            const channelName = el.find('.sw-select-result__result-item-text').innerText;
+            if(channelName === productData.saleschannel) {
+                el.trigger('click');
+                cy.wait(500);
+            }
+        });
     productData.categories.forEach( (category) => {
         cy.get('.sw-category-tree__input-field').type(category);
         cy.contains(category).should('be.visible');
         cy.get('.sw-category-tree__input-field').type('{enter}');
     });
-    cy.get('input.sw-select-selection-list__input').eq(0).type(productData.saleschannel + '{enter}', {force: true});
+
     cy.get('input[name=sw-field--product-name]').clear().type(productData.title);
     cy.get('input[name=sw-field--product-productNumber]').clear().type(productData.productNumber);
     cy.get('input[name=sw-price-field-gross]').eq(0).clear().type(productData.price);
@@ -40,8 +48,10 @@ Cypress.Commands.add('createProduct', (productData) => {
     if(productData.variant) {
         cy.contains('Variant generator').click();
         cy.contains('Start variant generator').click();
+        cy.wait(1000);
         productData.variant.searchTerms.forEach( (searchTerm) => {
             cy.get('.sw-property-search__search-field-container input').eq(0).type(searchTerm);
+            cy.wait(1000);
             cy.contains('color / ' + searchTerm).should('be.visible');
             cy.get('.sw-grid__body input').eq(0).check();
             cy.wait(500);

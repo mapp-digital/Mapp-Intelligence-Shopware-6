@@ -8,7 +8,7 @@ describe('MappIntelligencePluginTests: Install and Config', () => {
             .then(() => {
                 cy.visit('/admin#/sw/plugin/index/list');
             });
-        cy.contains('Mapp Intelligence').should('be.visible');
+        cy.contains('Mapp Intelligence', {timeout: 100000}).should('be.visible');
         cy.get('.sw-data-grid__body > tr').each( (el) => {
             if(/^Mapp Intelligence/.test(el[0].innerText)) {
                 _pluginRowNumber = el[0].className.slice(-1);
@@ -43,9 +43,7 @@ describe('MappIntelligencePluginTests: Install and Config', () => {
             method: 'post'
         }).as('activatePlugin');
 
-        cy.get(`.sw-data-grid__row--${_pluginRowNumber}`)
-            .contains('Deactivated')
-            .click();
+        cy.get(`.sw-data-grid__row--${_pluginRowNumber} input`).check();
         cy.wait('@activatePlugin', {timeout: 120000});
     });
 
