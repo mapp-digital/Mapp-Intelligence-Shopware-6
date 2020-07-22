@@ -1,6 +1,7 @@
 // / <reference types="Cypress" />
 
 describe('Landingpage datalayer', () => {
+
    it('convert imprint to landingpage', () => {
        let imprintRowNumber;
        const _r = /^Imprint$/;
@@ -33,16 +34,19 @@ describe('Landingpage datalayer', () => {
        cy.wait('@updateCMSPage');
    });
 
-   it('assign Health category to imprint', () => {
+   it('create landingpage category and assign it to imprint', () => {
        let imprintRowNumber;
        const _r = /^Imprint$/;
        cy.loginViaApi()
            .then(() => {
                cy.visit('/admin#/sw/category/index');
            });
-       cy.get('span.sw-icon.icon--small-arrow-small-right.sw-icon--fill').click();
-       cy.contains('Health').should('be.visible').click();
-       cy.contains('Change layout').should('be.visible').click();
+       cy.get('.sw-context-button__button').click();
+       cy.contains('New subcategory').should('be.visible').click();
+       cy.get('input[placeholder="Create category"').type('landingpage{enter}');
+       cy.contains('landingpage').should('be.visible').click();
+       cy.get('input[name=categoryActive]').should('be.visible').check();
+       cy.contains('Assign layout').should('be.visible').click();
        cy.get('div.sw-container > div.sw-cms-layout-modal__content-item')
            .each( (el) => {
                const title = el.find('.sw-cms-list-item__title')[0].innerText;
@@ -63,7 +67,7 @@ describe('Landingpage datalayer', () => {
    });
 
    it('datalayer on landingpage', () => {
-       cy.visit('/Health/');
+       cy.visit('/landingpage/');
        let data;
        cy.window()
            .then((win) => {
