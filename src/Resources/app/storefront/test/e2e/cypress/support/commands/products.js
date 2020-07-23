@@ -21,16 +21,14 @@ Cypress.Commands.add('createProduct', (productData) => {
             cy.visit('/admin#/sw/product/index');
         });
     cy.contains('Add product').click();
-    cy.get('input[placeholder="Select Sales Channel..."').click();
-    cy.get('li.sw-select-result')
-        .should('be.visible')
-        .each( (el) => {
-            const channelName = el.find('.sw-select-result__result-item-text').innerText;
-            if(channelName === productData.saleschannel) {
-                el.trigger('click');
-                cy.wait(500);
-            }
-        });
+    cy.get('input[placeholder="Select Sales Channel..."')
+        .click()
+        .wait(300)
+        .type(productData.saleschannel)
+        .wait(500)
+        .type('{enter}')
+        .wait(500);
+
     productData.categories.forEach( (category) => {
         cy.get('.sw-category-tree__input-field').type(category);
         cy.contains(category).should('be.visible');
@@ -50,7 +48,9 @@ Cypress.Commands.add('createProduct', (productData) => {
         cy.contains('Start variant generator').click();
         cy.wait(1000);
         productData.variant.searchTerms.forEach( (searchTerm) => {
-            cy.get('.sw-property-search__search-field-container input').eq(0).type(searchTerm);
+            cy.get('.sw-property-search__search-field-container input')
+                .eq(0)
+                .type(searchTerm, {delay: 3});
             cy.wait(1000);
             cy.contains('color / ' + searchTerm).should('be.visible');
             cy.get('.sw-grid__body input').eq(0).check();

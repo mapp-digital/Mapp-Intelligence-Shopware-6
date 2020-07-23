@@ -8,19 +8,13 @@ describe('Order tracking', () => {
            });
        cy.get('#sw-field--promotion-name').clear().type('mapp-test-promotion');
        cy.get('input[name=sw-field--promotion-active]').check();
-       cy.get('input[placeholder="Add Sales Channel..."').click();
-       cy.get('li.sw-select-result')
-           .should('be.visible')
-           .each( (el) => {
-               const channelName = el.find('.sw-select-result__result-item-text').innerText;
-               if(channelName === 'Storefront') {
-                   return el;
-               }
-           })
-           .then( (el) => {
-               el.trigger('click');
-               cy.wait(500);
-           });
+       cy.get('input[placeholder="Add Sales Channel..."')
+           .click()
+           .wait(300)
+           .type('Storefront')
+           .wait(500)
+           .type('{enter}')
+           .wait(500);
        cy.get('input[name=sw-field--promotion-useCodes]').check();
        cy.get('#sw-field--promotion-code').clear().type('mapptest');
        cy.contains('Save').click();
