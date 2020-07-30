@@ -16,36 +16,36 @@ describe('MappIntelligencePluginTests: Install and Config', () => {
         })
     });
 
-    it('install plugin', () => {
-        cy.server();
-        cy.route({
-            url: '/api/v2/search/plugin',
-            method: 'post'
-        }).as('installPlugin');
-
-        cy.get(`.sw-data-grid__row--${_pluginRowNumber} .sw-context-button__button`)
-            .click({force: true});
-        cy.get('.sw-context-menu').should('be.visible');
-        cy.contains('Install').click();
-        cy.get('.sw-context-menu').should('not.exist');
-
-        cy.wait('@installPlugin').then(() => {
-            cy.get('.sw-notifications__notification--0 .sw-alert__message')
-                .should('be.visible')
-                .contains('Plugin has been installed.');
-        });
-    });
-
-    it('activate plugin', () => {
-        cy.server();
-        cy.route({
-            url: '/api/v2/search/plugin',
-            method: 'post'
-        }).as('activatePlugin');
-
-        cy.get(`.sw-data-grid__row--${_pluginRowNumber} input`).check();
-        cy.wait('@activatePlugin', {timeout: 120000});
-    });
+    // it('install plugin', () => {
+    //     cy.server();
+    //     cy.route({
+    //         url: '/api/v2/search/plugin',
+    //         method: 'post'
+    //     }).as('installPlugin');
+    //
+    //     cy.get(`.sw-data-grid__row--${_pluginRowNumber} .sw-context-button__button`)
+    //         .click({force: true});
+    //     cy.get('.sw-context-menu').should('be.visible');
+    //     cy.contains('Install').click();
+    //     cy.get('.sw-context-menu').should('not.exist');
+    //
+    //     cy.wait('@installPlugin').then(() => {
+    //         cy.get('.sw-notifications__notification--0 .sw-alert__message')
+    //             .should('be.visible')
+    //             .contains('Plugin has been installed.');
+    //     });
+    // });
+    //
+    // it('activate plugin', () => {
+    //     cy.server();
+    //     cy.route({
+    //         url: '/api/v2/search/plugin',
+    //         method: 'post'
+    //     }).as('activatePlugin');
+    //
+    //     cy.get(`.sw-data-grid__row--${_pluginRowNumber} input`).check();
+    //     cy.wait('@activatePlugin', {timeout: 120000});
+    // });
 
     it('configure, check _tiConfig, wts and blacklist', () => {
         let config;

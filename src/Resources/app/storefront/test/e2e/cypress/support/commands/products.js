@@ -23,11 +23,11 @@ Cypress.Commands.add('createProduct', (productData) => {
     cy.contains('Add product').click();
     cy.get('input[placeholder="Select Sales Channel..."')
         .click()
-        .wait(300)
+        .wait(5000)
         .type(productData.saleschannel)
-        .wait(500)
+        .wait(5000)
         .type('{enter}')
-        .wait(500);
+        .wait(5000);
 
     productData.categories.forEach( (category) => {
         cy.get('.sw-category-tree__input-field').type(category);
@@ -40,21 +40,35 @@ Cypress.Commands.add('createProduct', (productData) => {
     cy.get('input[name=sw-price-field-gross]').eq(0).clear().type(productData.price);
     cy.get('input[name=sw-field--product-stock]').clear().type(productData.stock);
 
-    cy.contains('Save').click();
+    cy.contains('Save').wait(2000).click();
     cy.wait('@saveProduct', {timeout: 120000});
 
     if(productData.variant) {
-        cy.contains('Variant generator').click();
+
+        cy.get('.sw-tabs-item.sw-product-detail__tab-variants').click();
         cy.contains('Start variant generator').click();
+
         cy.wait(1000);
-        productData.variant.searchTerms.forEach( (searchTerm) => {
-            cy.get('.sw-property-search__search-field-container input')
-                .eq(0)
-                .type(searchTerm, {delay: 3});
-            cy.wait(1000);
-            cy.contains('color / ' + searchTerm).should('be.visible');
-            cy.get('.sw-grid__body input').eq(0).check();
-            cy.wait(500);
+        productData.variant.searchTerms.forEach( (searchTerm, termIndex) => {
+            if(termIndex === 0) {
+                cy.contains(searchTerm.category).click({force: true});
+                cy.get('.sw-property-search__tree-selection__option_grid input[type=checkbox]')
+                    .should('be.visible')
+                    .click({multiple: true})
+                    .wait(5000);
+            }
+            // cy.get('.sw-property-search__tree-selection__option_grid .sw-grid-row')
+            //     .each( (el, index) => {
+            //         el.find('.sw-grid__cell-content.is--truncate')
+            //             .each( (_n, element) => {
+            //                 if(searchTerm.value === element.innerText) {
+            //                     cy.wait(1000);
+            //                     cy.get(`.sw-property-search__tree-selection__option_grid .sw-grid__row--${index} input[type=checkbox]`)
+            //                         .click()
+            //                         .wait(2000);
+            //                 }
+            //             });
+            //     })
         });
         cy.get('.sw-modal__footer button.sw-button--primary').eq(0).click();
         cy.contains('Actions performed according to current configuration:').should('be.visible');
@@ -62,7 +76,4 @@ Cypress.Commands.add('createProduct', (productData) => {
         cy.wait('@propertyGroup');
         cy.wait(2000);
     }
-
-
-
 });

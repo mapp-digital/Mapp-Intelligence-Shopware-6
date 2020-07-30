@@ -67,6 +67,7 @@ describe('Landingpage datalayer', () => {
    });
 
    it('datalayer on landingpage', () => {
+       cy.wait(5000);
        cy.visit('/mapp-test/');
        let data;
        cy.window()

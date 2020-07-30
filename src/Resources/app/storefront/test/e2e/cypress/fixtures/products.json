@@ -20,11 +20,25 @@
         "productNumber": "mappvariable",
         "price": "999.99",
         "stock": "1000",
-        "categories": ["mapp-subcategory"],
+        "categories": [
+            "mapp-subcategory"
+        ],
         "saleschannel": "Storefront",
-        "variant": {
-            "searchTerms": ["azure", "greenyellow", "darkorange"]
+        "variants": {
+            "searchTerms": [
+                {
+                    "category": "color",
+                    "value": "azure"
+                },
+                {
+                    "category": "color",
+                    "value": "greenyellow"
+                },
+                {
+                    "category": "color",
+                    "value": "darkorange"
+                }
+            ]
         }
-
     }
 }
