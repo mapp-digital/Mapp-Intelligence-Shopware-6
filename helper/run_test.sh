@@ -50,7 +50,13 @@ docker exec -u 1000:1000 "$(docker ps -aqf 'name=shopware-test_app_server_1')" b
 echo "Run the e2e tests"
 docker exec -u 1000:1000 "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e/ && node_modules/.bin/cypress run"
 
+echo "Delete Mysql volumes from within docker..."
+docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "rm -R -f ./dev-ops/docker/_volumes"
+
 echo "Stop docker container"
 ./psh.phar docker:stop
 
-# TODO check for screenshots, if there, copy and return existatus fail, also copy screenshots somewhere and delete shopware-test directory
+echo "Delete test folder"
+cd .. && rm -R -f ./shopware-test
+
+# TODO check for screenshots, if there, copy and return existatus fail, also copy screenshots somewhere
