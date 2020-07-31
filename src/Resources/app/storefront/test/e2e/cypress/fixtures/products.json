@@ -1,0 +1,44 @@
+{
+    "normal": {
+        "title": "Mapp Test Product - Normäl",
+        "productNumber": "mäppnormal",
+        "price": "1000.99",
+        "stock": "1000",
+        "categories": ["mapp-subcategory"],
+        "saleschannel": "Storefront"
+    },
+    "soldout": {
+        "title": "Mapp Test Product - Soldout",
+        "productNumber": "mappsoldout",
+        "price": "99.99",
+        "stock": "0",
+        "categories": ["mapp-subcategory"],
+        "saleschannel": "Storefront"
+    },
+    "variant": {
+        "title": "Mapp Test Product - Variable",
+        "productNumber": "mappvariable",
+        "price": "999.99",
+        "stock": "1000",
+        "categories": [
+            "mapp-subcategory"
+        ],
+        "saleschannel": "Storefront",
+        "variants": {
+            "searchTerms": [
+                {
+                    "category": "color",
+                    "value": "azure"
+                },
+                {
+                    "category": "color",
+                    "value": "greenyellow"
+                },
+                {
+                    "category": "color",
+                    "value": "darkorange"
+                }
+            ]
+        }
+    }
+}

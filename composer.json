@@ -38,5 +38,11 @@
         "psr-4": {
             "Mapp\\MappIntelligence\\": "src/"
         }
+    },
+    "scripts": {
+        "test:latest": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh"
+        ]
     }
 }
