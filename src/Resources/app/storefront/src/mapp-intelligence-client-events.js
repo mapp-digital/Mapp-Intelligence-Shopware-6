@@ -107,7 +107,7 @@ export default class MappIntelligenceClientEvents extends Plugin {
             trackingData.productQuantity = event.target.elements['lineItems[' + trackingData.productShopwareId + '][quantity]'].value;
         }
         if(trackingData.productCost && trackingData.productQuantity) {
-            trackingData.productCost = trackingData.productQuantity * trackingData.productCost;
+            trackingData.productCost = (trackingData.productQuantity * trackingData.productCost).toFixed(2);
         }
         if(trackingData.productCategories) {
             trackingData.productCategories = JSON.parse(trackingData.productCategories);

@@ -35,6 +35,9 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         if(!isset($config['tiDomain'])) {
             $config['tiDomain'] = 'responder.wt-safetag.com';
         }
+        if(!isset($config['tiId'])) {
+            $config['tiId'] = '111111111111111';
+        }
 
         //TODO make this configurable
         $config['v'] = 5;
