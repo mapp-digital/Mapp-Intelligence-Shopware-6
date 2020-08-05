@@ -1,7 +1,7 @@
 {
     "name": "mapp/intelligence",
     "description": "Mapp Intelligence tracking",
-    "version": "v1.0.0",
+    "version": "v1.0.1",
     "type": "shopware-platform-plugin",
     "license": "proprietary",
     "authors": [
@@ -43,6 +43,10 @@
         "test:latest": [
             "Composer\\Config::disableProcessTimeout",
             "bash ./helper/run_test.sh"
+        ],
+        "test:6.2": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh 6.2"
         ]
     }
 }
