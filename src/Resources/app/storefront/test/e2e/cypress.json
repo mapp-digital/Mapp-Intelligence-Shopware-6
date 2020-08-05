@@ -8,10 +8,10 @@
     "pageLoadTimeout": 120000,
     "salesChannelName": "Storefront",
     "video": false,
-    "screenshotsFolder": "./../../../../../../../../../screenshots",
+    "screenshotsFolder": "./../app/build/artifacts/e2e/screenshots",
     "reporter": "junit",
     "reporterOptions": {
-        "mochaFile": "./../../../../../../../../../sw6-test-output-[hash].xml",
+        "mochaFile": "./../app/build/artifacts/e2e/my-test-output-[hash].xml",
         "jenkinsMode": true
     }
 }

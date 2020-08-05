@@ -54,6 +54,9 @@ cp -r ./helper/test-data-plugin/SwagPlatformDemoData ./shopware-test/custom/plug
 echo "Installing Shopware6 Docker container..."
 cd shopware-test && ./psh.phar docker:start
 
+echo "Clear composer cache inside app container..."
+docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "rm -R -f /.composer/cache/files"
+
 echo "Installing Shopware6 inside Docker container..."
 docker exec -u 1000:1000 "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "./psh.phar install"
 
@@ -82,10 +85,10 @@ echo "Run the e2e tests"
 docker exec -u 1000:1000 "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e/ && node_modules/.bin/cypress run"
 
 echo "Copy test results..."
-cp -r ./*.xml ./../test-results/
-if [[ -d "./screenshots" ]]
+cp -r ./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e/*.xml ./../test-results/
+if [[ -d "./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e/screenshots" ]]
     then
-        cp -r ./screenshots ./../test-results/
+        cp -r ./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e/screenshots ./../test-results/
 fi
 
 echo "Delete Mysql volumes from within docker..."

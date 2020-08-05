@@ -7,7 +7,7 @@ describe('MappIntelligencePluginTests: User and account', () => {
         // activate birthday
         cy.server();
         cy.route({
-            url: '/api/v1/_action/system-config/batch',
+            url: '/api/v*/_action/system-config/batch',
             method: 'post'
         }).as('saveConfig');
 

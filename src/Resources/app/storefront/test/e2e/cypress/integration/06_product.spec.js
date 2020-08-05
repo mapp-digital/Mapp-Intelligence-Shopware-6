@@ -6,7 +6,7 @@ describe('Product detail datalayer', () => {
     //     const _r = /^mapp-test$/;
     //     cy.server();
     //     cy.route({
-    //         url: '/api/v2/category',
+    //         url: '/api/v*/category',
     //         method: 'post'
     //     }).as('saveCategory');
     //

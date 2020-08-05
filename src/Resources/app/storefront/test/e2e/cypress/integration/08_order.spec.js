@@ -41,7 +41,7 @@ describe('Order tracking', () => {
         cy.get('#addPromotionOffcanvasCartInput')
             .should('be.visible')
             .type('mapptest{enter}');
-        cy.contains('Code has been added').should('be.visible');
+        cy.contains('mapp-test-promotion').should('be.visible');
 
         cy.visit('/MappIntelligence-Variant-product/SWDEMO10005.1');
         cy.get('.custom-select.product-detail-quantity-select').select("3");
@@ -52,9 +52,7 @@ describe('Order tracking', () => {
             .should('be.visible')
             .click();
         cy.get('#tos').check({force: true});
-        cy.contains('Send order')
-            .should('be.visible')
-            .click();
+        cy.get('#confirmOrderForm').submit();
         cy.url().should('match', /checkout\/finish\?orderId=[0-9a-f]{32}$/);
         let data;
         cy.window()

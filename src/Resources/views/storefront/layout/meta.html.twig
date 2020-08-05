@@ -56,7 +56,7 @@
                 {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Internal Search';{% endif %}
                 {% if mappInclude('pageNumber') %}window._ti.pageNumber = {{ getPageNumber()|raw }};{% endif %}
                 {% if mappInclude('internalSearch') %}window._ti.internalSearch = '{{ page.searchTerm|e('js') }}';{% endif %}
-                {% if mappInclude('numberOfSearchResults') %}window._ti.numberOfSearchResults = '{{ page.searchResult.total }}';{% endif %}
+                {% if mappInclude('numberOfSearchResults') %}window._ti.numberOfSearchResults = '{{ page.listing.total }}';{% endif %}
             {% endif %}
 
             {% if 'frontend.account' in activeRoute %}
