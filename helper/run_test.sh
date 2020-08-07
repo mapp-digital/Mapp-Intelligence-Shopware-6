@@ -1,5 +1,31 @@
 #!/bin/bash
 
+# add -v 6.2 or -v 6.3 to test a specific version, otherwise the script will checkout the latest version of the dev repo
+# add -j to activate Jenkins mode - 2 port bindings (8080 and 8005) will be deleted from docker-compose.yml
+
+argversion="latest"
+jenkins=0
+
+while getopts ":v:j" opt; do
+  case $opt in
+    v)
+      echo "Version set to: $OPTARG" >&2
+	  argversion="$OPTARG"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+    j)
+	  echo "Jenkins mode activated"
+	  jenkins=1
+  esac
+done
+
 echo "Checking if Shopware6 testfolder exists..."
 if [[ -d "./shopware-test" ]]
     then
@@ -29,18 +55,33 @@ fi
 echo "Cloning latest Shopware6 repo..."
 git clone https://github.com/shopware/development.git shopware-test
 
-# 1st argument supposed to be repo tag till 2nd number, like 6.2, 6.3 etc.
-if [ -z "$1" ]
+# if -v option was set, value is used here
+if [ "$argversion" == "latest" ]
     then
         echo "@@@Version: latest"
     else
         cd ./shopware-test
-        pattern=v$1.*
+        pattern=v$argversion.*
         version=$(git describe --tags $(git rev-list --tags=$pattern --max-count=1))
         echo "@@@Version: $version"
         git checkout tags/$version && cd ..
 fi
 
+#Jenkins mode logic
+if [ "$jenkins" -eq "1" ]; then
+    echo "looking for docker-compose.override.yml file..."
+    if [[ -f "./shopware-test/dev-ops/docker/docker-compose.override.yml" ]]
+    then
+        echo "File found - editing docker-compose.xml file now..."
+        sed '/__DEVPORT__:__DEVPORT__/d' ./shopware-test/dev-ops/docker/docker-compose.override.yml > ./changed.yml
+        sed '/8005:8005/d' ./changed.yml > ./shopware-test/dev-ops/docker/docker-compose.override.yml
+        rm ./changed.yml
+        echo "File changed!"
+    else
+        echo "dev-ops/docker/docker-compose.override.yml file not found"
+        exit 1
+    fi
+fi
 
 echo "Copy plugin into Shopware..."
 mkdir ./shopware-test/custom/plugins/MappIntelligence
@@ -99,4 +140,3 @@ echo "Stop docker container"
 
 echo "Delete test folder"
 cd .. && rm -R -f ./shopware-test
-
