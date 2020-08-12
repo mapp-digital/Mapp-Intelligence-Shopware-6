@@ -1,5 +1,9 @@
 // / <reference types="Cypress" />
 
+beforeEach( () => {
+    cy.consentMapp();
+});
+
 describe('MappIntelligencePluginTests: User and account', () => {
     const yearsSince1970 = (new Date().getFullYear() - 1970).toString();
 

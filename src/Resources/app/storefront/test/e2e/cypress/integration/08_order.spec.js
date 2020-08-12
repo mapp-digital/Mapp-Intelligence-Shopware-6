@@ -1,5 +1,9 @@
 // / <reference types="Cypress" />
 
+beforeEach( () => {
+    cy.consentMapp();
+});
+
 describe('Order tracking', () => {
     it('create promotion / coupon', () => {
         cy.loginViaApi()

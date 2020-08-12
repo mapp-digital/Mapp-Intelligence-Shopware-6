@@ -2,7 +2,9 @@
 
 describe('Landingpage datalayer', () => {
 
-
+    beforeEach( () => {
+        cy.consentMapp();
+    });
 
    it('datalayer on landingpage', () => {
        cy.wait(5000);

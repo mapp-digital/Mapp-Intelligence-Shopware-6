@@ -44,6 +44,10 @@
             "Composer\\Config::disableProcessTimeout",
             "bash ./helper/run_test.sh"
         ],
+        "test:latest:keep": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh -k"
+        ],
         "test:6.2": [
             "Composer\\Config::disableProcessTimeout",
             "bash ./helper/run_test.sh -v 6.2"

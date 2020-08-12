@@ -1,5 +1,9 @@
 // / <reference types="Cypress" />
 
+beforeEach( () => {
+    cy.consentMapp();
+});
+
 describe('Search products', () => {
     it('search testproducts', () => {
         let wts;

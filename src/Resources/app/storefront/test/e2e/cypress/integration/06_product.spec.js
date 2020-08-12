@@ -1,5 +1,9 @@
 // / <reference types="Cypress" />
 
+beforeEach( () => {
+    cy.consentMapp();
+});
+
 describe('Product detail datalayer', () => {
 
     // it('create test subcategory', () => {
