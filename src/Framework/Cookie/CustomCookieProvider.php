@@ -2,15 +2,22 @@
 
 namespace Mapp\MappIntelligence\Framework\Cookie;
 
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Shopware\Storefront\Framework\Cookie\CookieProviderInterface;
 
 class CustomCookieProvider implements CookieProviderInterface {
 
     private $originalService;
 
-    function __construct(CookieProviderInterface $service)
+    /**
+     * @var SystemConfigService
+     */
+    private $systemConfigService;
+
+    function __construct(CookieProviderInterface $service, SystemConfigService $systemConfigService)
     {
         $this->originalService = $service;
+        $this->systemConfigService = $systemConfigService;
     }
 
     private const singleCookie = [
@@ -24,6 +31,15 @@ class CustomCookieProvider implements CookieProviderInterface {
 
     public function getCookieGroups(): array
     {
+
+        $config = $this->systemConfigService->get('MappIntelligence.config');
+        $omitConsent = false;
+        if(isset($config['consent']) && $config['consent'] === false) {
+            return array_merge(
+                $this->originalService->getCookieGroups(),
+                []
+            );
+        }
         return array_merge(
             $this->originalService->getCookieGroups(),
             [

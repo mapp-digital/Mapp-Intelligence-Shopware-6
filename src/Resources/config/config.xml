@@ -33,5 +33,13 @@
             <helpText>Please indicate any attribute you do not want to display in your data layer (comma-separated)</helpText>
             <copyable>true</copyable>
         </input-field>
+        <input-field type="checkbox">
+            <name>consent</name>
+            <defaultValue>true</defaultValue>
+            <label lang="de-DE">Mapp Intelligence im Shopware 6 Cookie Consent Manager aufzählen</label>
+            <label>List Mapp Intelligence in Shopware 6 Cookie Consent Manager</label>
+            <helpText lang="de-DE">Aktiviern Sie diese Option, wenn Sie Mapp Intelligence nur mit der ausdrücklichen Genehmigung des Users im Shopware 6 Consent Manager nutzen wollen. Gibt der Nutzer die Zustimmung nicht, so werden keine Daten erhoben.</helpText>
+            <helpText>With this option activated, no data is tracked unless the visitor consents via Shopware 6 Cookie Consent manager.</helpText>
+        </input-field>
     </card>
 </config>
