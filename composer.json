@@ -1,7 +1,7 @@
 {
     "name": "mapp/intelligence",
     "description": "Mapp Intelligence tracking",
-    "version": "v1.0.1",
+    "version": "v1.0.2",
     "type": "shopware-platform-plugin",
     "license": "proprietary",
     "authors": [
