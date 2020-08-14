@@ -34,28 +34,37 @@ describe('MappIntelligencePluginTests: General preparations', () => {
         cy.wait('@updateCMSPage');
     });
 
-    it('make sure that standard shipping method is available', () => {
+    // it('make sure that standard shipping method is available', () => {
+    //
+    //     cy.server();
+    //     cy.route({
+    //         url: '/api/v*/search/shipping-method',
+    //         method: 'post'
+    //     }).as('updateShipping');
+    //     cy.route({
+    //         url: '/api/v*/search/rule',
+    //         method: 'post'
+    //     }).as('searchRule');
+    //
+    //     cy.loginViaApi()
+    //         .then(() => {
+    //             cy.visit('/admin#/sw/settings/shipping/index');
+    //         });
+    //     cy.contains('Standard').click();
+    //     cy.get('.sw-settings-shipping-detail__top-rule .sw-select__selection-indicators')
+    //         .click()
+    //         .wait('@searchRule');
+    //     cy.contains('Always valid').should('be.visible').click();
+    //     cy.contains('Save').click({force: true}).wait('@updateShipping').wait(1000);
+    // });
 
-        cy.server();
-        cy.route({
-            url: '/api/v*/search/shipping-method',
-            method: 'post'
-        }).as('updateShipping');
-        cy.route({
-            url: '/api/v*/search/rule',
-            method: 'post'
-        }).as('searchRule');
-
-        cy.loginViaApi()
-            .then(() => {
-                cy.visit('/admin#/sw/settings/shipping/index');
-            });
-        cy.contains('Standard').click();
-        cy.get('.sw-settings-shipping-detail__top-rule .sw-select__selection-indicators')
-            .click()
-            .wait('@searchRule');
-        cy.contains('Always valid').should('be.visible').click();
-        cy.contains('Save').click({force: true}).wait('@updateShipping').wait(1000);
+    // We create this shippingservice because sometimes SW6 Demo shop has none and I hope it defaukt to this one then.
+    it('create a MAPP shipping service',{
+        env: {
+            apiVersion: 'v1'
+        }
+    }, () => {
+        cy.createShippingFixture();
     });
 
     it('create mapp-test category and assign it to imprint', () => {
