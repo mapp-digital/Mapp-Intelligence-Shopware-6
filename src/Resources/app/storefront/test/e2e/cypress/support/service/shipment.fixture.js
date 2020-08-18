@@ -10,18 +10,24 @@ class ShipmentFixture extends AdminFixtureService {
             value: 'Cart >= 0'
         });
 
-        const shippingMethod = () => this.search('shipping-method', {
+        const standardShippingMethod = () => this.search('shipping-method', {
             field: 'name',
             type: 'equals',
             value: 'Standard'
         });
+        const expressShippingMethod = () => this.search('shipping-method', {
+            field: 'name',
+            type: 'equals',
+            value: 'Express'
+        });
 
-        return Promise.all([rule(), shippingMethod()])
-            .then(([rule, shippingMethod]) => {
+        return Promise.all([rule(), standardShippingMethod(), expressShippingMethod()])
+            .then(([rule, standardShippingMethod, expressShippingMethod]) => {
                 const payload = {
                     availabilityRuleId: rule.id
                 }
-                return this.apiClient.patch(`/v2/shipping-method/${shippingMethod.id}?_response=true`, payload);
+                this.apiClient.patch(`/v2/shipping-method/${expressShippingMethod.id}?_response=true`, payload)
+                return this.apiClient.patch(`/v2/shipping-method/${standardShippingMethod.id}?_response=true`, payload);
             });
     }
 }
