@@ -3,6 +3,7 @@
 describe('MappIntelligencePluginTests: Homepage', () => {
 
     beforeEach(() => {
+        cy.consentMapp();
         cy.visit('/')
     });
 

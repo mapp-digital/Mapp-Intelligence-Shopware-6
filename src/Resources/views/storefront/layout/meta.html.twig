@@ -2,17 +2,6 @@
 
 {% block layout_head_meta_tags_charset %}
     {{ parent() }}
-    {% block ti_loader_snippet %}
-        <script type="text/javascript">
-            window._tiConfig = window._tiConfig || {
-                tiDomain: "{{ mappIntelligence.tiDomain|sw_sanitize }}",
-                tiId: "{{ mappIntelligence.tiId|sw_sanitize }}",
-                option: {}
-            };
-            (function(a,d,c,f){a.wts=a.wts||[];var g=function(b){var a="";b.customDomain&&b.customPath?a=b.customDomain+"/"+b.customPath:b.tiDomain&&b.tiId&&(a=b.tiDomain+"/resp/api/get/"+b.tiId+"?url="+encodeURIComponent("https://"+d.location.host+"/")+"&v=5");if(b.option)for(var c in b.option)a+="&"+c+"="+encodeURIComponent(b.option[c]);return a};if(-1===d.cookie.indexOf("wt_r=1")){var e=d.getElementsByTagName(c)[0];c=d.createElement(c);c.async=!0;c.onload=function(){if("undefined"!==typeof a.wt_r&&!isNaN(a.wt_r)){var b=
-                new Date,c=b.getTime()+1E3*parseInt(a.wt_r);b.setTime(c);d.cookie="wt_r=1;path=/;expires="+b.toUTCString()}};c.onerror=function(){"undefined"!==typeof a.wt_mcp_hide&&"function"===typeof a.wt_mcp_hide.show&&(a.wt_mcp_hide.show(),a.wt_mcp_hide.show=function(){})};c.src="//"+g(f);e.parentNode.insertBefore(c,e)}})(window,document,"script",_tiConfig);
-        </script>
-    {% endblock %}
 
     {% block _ti %}
         <script>
@@ -63,10 +52,6 @@
                 {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Account';{% endif %}
             {% endif %}
 
-            {% if controllerAction == 'checkoutRegisterPage' or controllerAction == 'confirmPage'  %}
-                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Checkout';{% endif %}
-            {% endif %}
-
             {% if activeRoute == 'frontend.detail.page' %}
                 {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Catalogue';{% endif %}
                 {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Product Detail';{% endif %}
@@ -88,23 +73,27 @@
             {% endif %}
 
             {% if activeRoute == 'frontend.checkout.finish.page' %}
-                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Checkout';{% endif %}
+                {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
+
                 {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'conf';{% endif %}
                 {% if mappInclude('orderId') %}window._ti.orderId = '{{ page.order.orderNumber|e('js') }}';{% endif %}
                 {% if mappInclude('totalOrderValue') %}window._ti.totalOrderValue = '{{ page.order.amountTotal }}';{% endif %}
-                {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
+
                 {% if mappInclude('affiliateCode') and page.order.affiliateCode %}window._ti.affiliateCode = '{{ page.order.affiliateCode|e('js') }}';{% endif %}
                 {% if mappInclude('campaignCode') and page.order.campaignCode %}window._ti.campaignCode = '{{ page.order.campaignCode|e('js') }}';{% endif %}
-                {% if mappInclude('products') %}window._ti.products = [];{% endif %}
+            {% endif %}
 
-                {% for product in page.order.lineItems %}
+            {% if activeRoute == 'frontend.checkout.finish.page' or controllerAction == 'checkoutRegisterPage' or controllerAction == 'confirmPage' %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Checkout';{% endif %}
+                {% if mappInclude('products') %}window._ti.products = [];{% endif %}
+                {% for product in attribute(page, (activeRoute == 'frontend.checkout.finish.page' ? 'order' : 'cart')).lineItems %}
                     {% if product.type == 'promotion' and product.totalPrice %}
                         {% if mappInclude('couponValue') %}
                             if(window._ti.couponValue) {
-                                window._ti.couponValue = parseFloat(window._ti.couponValue) + {{ product.totalPrice * -1 }} + '';
-                            } else {
-                                window._ti.couponValue = {{ product.totalPrice * -1 }} + '';
-                            }
+                                    window._ti.couponValue = parseFloat(window._ti.couponValue) + {{ product.totalPrice * -1 }} + '';
+                                } else {
+                                    window._ti.couponValue = {{ product.totalPrice * -1 }} + '';
+                                }
                         {% endif %}
                     {% else %}
                         if(window._ti.products) {
@@ -119,7 +108,6 @@
                         }
                     {% endif %}
                 {% endfor %}
-
                 if(window._ti.products) {
                     (function(){
                         var _p = []; // re-index in case of promotions
@@ -180,7 +168,39 @@
                 if(window._ti.productCategories && window._ti.productCategories[1]) {
                     {% if mappInclude('productSubCategory') %}window._ti.productSubCategory = window._ti.productCategories[1];{% endif %}
                 }
+                {% if controllerAction == 'checkoutRegisterPage' or controllerAction == 'confirmPage' %}
+                    // put product info under cart, so no product view goes out
+                    window._ti.cart = {};
+                    (function(){
+                        var productKeys = [];
+                        var _r = /^product.*/;
+                        for(var key in window._ti){
+                            if(window._ti.hasOwnProperty(key) && _r.test(key)) {
+                                productKeys.push(key);
+                            }
+                        }
+                        for(var i=0;i<productKeys.length; i++) {
+                            var k = productKeys[i];
+                            window._ti.cart[k] = window._ti[k];
+                            delete window._ti[k];
+                        }
+                    }());
+                {% endif %}
             {% endif %}
+        </script>
+    {% endblock %}
+
+    {% block ti_loader_snippet %}
+        <script type="text/javascript">
+            window._tiConfig = window._tiConfig || {
+                tiDomain: "{{ mappIntelligence.tiDomain|sw_sanitize }}",
+                tiId: "{{ mappIntelligence.tiId|sw_sanitize }}",
+                option: {}
+            };
+            if(document.cookie.indexOf('sw_MappIntelligence') !== -1 || {{ mappIntelligence.consent ? 'false' : 'true' }}) {
+                (function(a,d,c,f){a.wts=a.wts||[];var g=function(b){var a="";b.customDomain&&b.customPath?a=b.customDomain+"/"+b.customPath:b.tiDomain&&b.tiId&&(a=b.tiDomain+"/resp/api/get/"+b.tiId+"?url="+encodeURIComponent("https://"+d.location.host+"/")+"&v=5");if(b.option)for(var c in b.option)a+="&"+c+"="+encodeURIComponent(b.option[c]);return a};if(-1===d.cookie.indexOf("wt_r=1")){var e=d.getElementsByTagName(c)[0];c=d.createElement(c);c.async=!0;c.onload=function(){if("undefined"!==typeof a.wt_r&&!isNaN(a.wt_r)){var b=
+                    new Date,c=b.getTime()+1E3*parseInt(a.wt_r);b.setTime(c);d.cookie="wt_r=1;path=/;expires="+b.toUTCString()}};c.onerror=function(){"undefined"!==typeof a.wt_mcp_hide&&"function"===typeof a.wt_mcp_hide.show&&(a.wt_mcp_hide.show(),a.wt_mcp_hide.show=function(){})};c.src="//"+g(f);e.parentNode.insertBefore(c,e)}})(window,document,"script",_tiConfig);
+            }
         </script>
     {% endblock %}
 {% endblock %}

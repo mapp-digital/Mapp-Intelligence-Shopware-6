@@ -1,5 +1,9 @@
 // / <reference types="Cypress" />
 
+beforeEach( () => {
+    cy.consentMapp();
+});
+
 describe('Order tracking', () => {
     it('create promotion / coupon', () => {
         cy.loginViaApi()
@@ -27,7 +31,11 @@ describe('Order tracking', () => {
         cy.contains('mapp-test-promotion').should('be.visible');
     });
 
-    it('order testproducts with coupon', () => {
+    it('order testproducts with coupon',{
+            env: {
+                apiVersion: 'v2'
+            }
+        }, () => {
         cy.fixture('customers').then( (customer) => {
             cy.loginAsCustomer(customer.male);
         });
@@ -51,47 +59,58 @@ describe('Order tracking', () => {
         cy.contains('Proceed to checkout')
             .should('be.visible')
             .click();
-        cy.get('#tos').check({force: true});
-        cy.get('#confirmOrderForm').submit();
-        cy.url().should('match', /checkout\/finish\?orderId=[0-9a-f]{32}$/);
-        let data;
-        cy.window()
-            .then((win) => {
-                data = win._ti;
-            })
-            .then(() => {
-                expect(data.pageRequestType).to.not.exist;
-                expect(data.contentCategory).to.equal('Checkout');
-                expect(data.couponValue).to.equal('0.25');
-                expect(data.currency).to.equal('EUR');
-                expect(data.customerId).to.match(/^[0-9a-f]{32}$/);
-                expect(data.eMailSubscription).to.equal('1');
-                expect(data.gender).to.equal('1');
-                expect(data.orderId).to.match(/^[0-9]{5}$/);
-                expect(data.pageName).to.equal('localhost:8000/checkout/finish');
-                expect(data.pageTitle).to.equal('Demostore');
-                expect(data.productCategory).to.equal('Catalogue #1;Catalogue #1');
-                expect(data.productShopwareId).to.match(/^[0-9a-f]{32};[0-9a-f]{32}$/);
-                expect(data.shoppingCartStatus).to.equal('conf');
-                expect(data.totalOrderValue).to.equal('2539.47');
-                expect(data.productSoldOut).to.equal(';');
+        cy.get('#tos').check({force: true}).then(() => {
+            // sometimes SW6 sets the shipment rule sunday-only for standard shipment. Then the order won't work.
+            if(Cypress.$('.alert').length === 1) {
+                cy.fixShipment().then(() => {
+                    cy.wait(1000);
+                    cy.visit('/checkout/confirm');
+                    cy.get('#tos').check({force: true});
+                    cy.get('#confirmOrderForm').submit();
+                });
+            } else {
+                cy.get('#confirmOrderForm').submit();
+            }
+            cy.url().should('match', /checkout\/finish\?orderId=[0-9a-f]{32}$/);
+            let data;
+            cy.window()
+                .then((win) => {
+                    data = win._ti;
+                })
+                .then(() => {
+                    expect(data.pageRequestType).to.not.exist;
+                    expect(data.contentCategory).to.equal('Checkout');
+                    expect(data.couponValue).to.equal('0.25');
+                    expect(data.currency).to.equal('EUR');
+                    expect(data.customerId).to.match(/^[0-9a-f]{32}$/);
+                    expect(data.eMailSubscription).to.equal('1');
+                    expect(data.gender).to.equal('1');
+                    expect(data.orderId).to.match(/^[0-9]{5}$/);
+                    expect(data.pageName).to.equal('localhost:8000/checkout/finish');
+                    expect(data.pageTitle).to.equal('Demostore');
+                    expect(data.productCategory).to.equal('Catalogue #1;Catalogue #1');
+                    expect(data.productShopwareId).to.match(/^[0-9a-f]{32};[0-9a-f]{32}$/);
+                    expect(data.shoppingCartStatus).to.equal('conf');
+                    expect(data.totalOrderValue).to.equal('2539.47');
+                    expect(data.productSoldOut).to.equal(';');
 
-                // SW seems to mix the order of line items randomly
-                if(data.productId.slice(-2) === '.1') {
-                    expect(data.productCost).to.equal('495.95;19.99');
-                    expect(data.productId).to.equal('MAPP10001;SWDEMO10005.1');
-                    expect(data.productName).to.equal('MappIntelligence product äöü;MappIntelligence Variant product');
-                    expect(data.productQuantity).to.equal('5;3');
-                    expect(data.productCategories).to.deep.equal(["Catalogue #1;Catalogue #1", "Free time & electronics;Clothing", ";Women"]);
-                    expect(data.productSubCategory).to.equal('Free time & electronics;Clothing');
-                } else {
-                    expect(data.productCost).to.equal('19.99;495.95');
-                    expect(data.productId).to.equal('SWDEMO10005.1;MAPP10001');
-                    expect(data.productName).to.equal('MappIntelligence Variant product;MappIntelligence product äöü');
-                    expect(data.productQuantity).to.equal('3;5');
-                    expect(data.productCategories).to.deep.equal(["Catalogue #1;Catalogue #1", "Clothing;Free time & electronics", "Women;"]);
-                    expect(data.productSubCategory).to.equal('Clothing;Free time & electronics');
-                }
-            });
+                    // SW seems to mix the order of line items randomly
+                    if(data.productId.slice(-2) === '.1') {
+                        expect(data.productCost).to.equal('495.95;19.99');
+                        expect(data.productId).to.equal('MAPP10001;SWDEMO10005.1');
+                        expect(data.productName).to.equal('MappIntelligence product äöü;MappIntelligence Variant product');
+                        expect(data.productQuantity).to.equal('5;3');
+                        expect(data.productCategories).to.deep.equal(["Catalogue #1;Catalogue #1", "Free time & electronics;Clothing", ";Women"]);
+                        expect(data.productSubCategory).to.equal('Free time & electronics;Clothing');
+                    } else {
+                        expect(data.productCost).to.equal('19.99;495.95');
+                        expect(data.productId).to.equal('SWDEMO10005.1;MAPP10001');
+                        expect(data.productName).to.equal('MappIntelligence Variant product;MappIntelligence product äöü');
+                        expect(data.productQuantity).to.equal('3;5');
+                        expect(data.productCategories).to.deep.equal(["Catalogue #1;Catalogue #1", "Clothing;Free time & electronics", "Women;"]);
+                        expect(data.productSubCategory).to.equal('Clothing;Free time & electronics');
+                    }
+                });
+        });
     });
 });

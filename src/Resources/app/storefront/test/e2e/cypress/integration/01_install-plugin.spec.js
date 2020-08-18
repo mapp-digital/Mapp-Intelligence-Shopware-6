@@ -48,6 +48,7 @@ describe('MappIntelligencePluginTests: Install and Config', () => {
     // });
 
     it('configure, check _tiConfig, wts and blacklist', () => {
+        cy.consentMapp();
         let config;
         let data;
 
@@ -94,6 +95,7 @@ describe('MappIntelligencePluginTests: Install and Config', () => {
     });
 
     it('deactivate blacklist', () => {
+        cy.consentMapp();
         let data;
 
         cy.server();

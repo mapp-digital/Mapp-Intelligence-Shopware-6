@@ -2,11 +2,13 @@
 
 # add -v 6.2 or -v 6.3 to test a specific version, otherwise the script will checkout the latest version of the dev repo
 # add -j to activate Jenkins mode - 2 port bindings (8080 and 8005) will be deleted from docker-compose.yml
+# add -k if you don't want to delete the instance afterwards
 
 argversion="latest"
 jenkins=0
+keep=0
 
-while getopts ":v:j" opt; do
+while getopts ":v:j:k" opt; do
   case $opt in
     v)
       echo "Version set to: $OPTARG" >&2
@@ -23,24 +25,31 @@ while getopts ":v:j" opt; do
     j)
 	  echo "Jenkins mode activated"
 	  jenkins=1
+	  ;;
+	k)
+	  echo "Keep-mode: instance will not be deleted"
+	  keep=1
+	  ;;
   esac
 done
 
-echo "Checking if Shopware6 testfolder exists..."
-if [[ -d "./shopware-test" ]]
-    then
-        echo "It does, now deleting..."
-        cd ./shopware-test/ && ./psh.phar docker:start
-        docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "rm -R -f ./dev-ops/docker/_volumes"
-        ./psh.phar docker:stop
-        cd .. && chown -R 1000 ./shopware-test/ && rm -R -f ./shopware-test/
-        if [[ -d "./shopware-test" ]]
-            then
-                echo "Could not remove test directory"
-                exit 1
-        fi
-    else
-        echo "Folder not found!"
+if [ "$keep" -eq "0" ]; then
+    echo "Checking if Shopware6 testfolder exists..."
+    if [[ -d "./shopware-test" ]]
+        then
+            echo "It does, now deleting..."
+            cd ./shopware-test/ && ./psh.phar docker:start
+            docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "rm -R -f ./dev-ops/docker/_volumes"
+            ./psh.phar docker:stop
+            cd .. && chown -R 1000 ./shopware-test/ && rm -R -f ./shopware-test/
+            if [[ -d "./shopware-test" ]]
+                then
+                    echo "Could not remove test directory"
+                    exit 1
+            fi
+        else
+            echo "Folder not found!"
+    fi
 fi
 
 echo "Checking if test-results exists..."
@@ -95,8 +104,10 @@ cp -r ./helper/test-data-plugin/SwagPlatformDemoData ./shopware-test/custom/plug
 echo "Installing Shopware6 Docker container..."
 cd shopware-test && ./psh.phar docker:start
 
-echo "Clear composer cache inside app container..."
-docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "rm -R -f /.composer/cache/files"
+if [ "$keep" -eq "0" ]; then
+    echo "Clear composer cache inside app container..."
+    docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "rm -R -f /.composer/cache/files"
+fi
 
 echo "Installing Shopware6 inside Docker container..."
 docker exec -u 1000:1000 "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "./psh.phar install"
@@ -132,11 +143,17 @@ if [[ -d "./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/ap
         cp -r ./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e/screenshots ./../test-results/
 fi
 
-echo "Delete Mysql volumes from within docker..."
-docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "rm -R -f ./dev-ops/docker/_volumes"
+if [ "$keep" -eq "0" ]; then
+    echo "Delete Mysql volumes from within docker..."
+    docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "rm -R -f ./dev-ops/docker/_volumes"
+fi
+
 
 echo "Stop docker container"
 ./psh.phar docker:stop
 
-echo "Delete test folder"
-cd .. && rm -R -f ./shopware-test
+if [ "$keep" -eq "0" ]; then
+    echo "Delete test folder"
+    cd .. && rm -R -f ./shopware-test
+fi
+

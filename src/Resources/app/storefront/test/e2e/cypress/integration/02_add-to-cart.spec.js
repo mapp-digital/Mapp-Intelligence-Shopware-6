@@ -2,6 +2,10 @@
 
 describe('MappIntelligencePluginTests: Add-to-Cart', () => {
 
+    beforeEach( () => {
+        cy.consentMapp();
+    });
+
     it('activate product overview on startpage', () => {
         let rowNumber;
         cy.loginViaApi()
