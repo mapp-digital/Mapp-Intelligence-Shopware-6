@@ -2,7 +2,7 @@
     "mapp":{
         "mappIntelligence":{
             "displayName" : "Mapp Intelligence",
-            "description" : "Mapp Intelligence Tracking english description TBD"
+            "description" : "Cookies allow Mapp Intelligence to collect anonymized information about the useage of the website, e.g. time spent on pages visited and links clicked. The information collected here is only used for further processing by the respective site operator. Mapp does not collect any data for its own purposes. The information is used to enhance the quality of the website and the content provided to the user."
         }
     }
 }

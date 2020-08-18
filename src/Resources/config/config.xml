@@ -36,10 +36,10 @@
         <input-field type="checkbox">
             <name>consent</name>
             <defaultValue>true</defaultValue>
-            <label lang="de-DE">Mapp Intelligence im Shopware 6 Cookie Consent Manager aufzählen</label>
+            <label lang="de-DE">Mapp Intelligence im Shopware 6 Cookie Consent Manager auflisten</label>
             <label>List Mapp Intelligence in Shopware 6 Cookie Consent Manager</label>
-            <helpText lang="de-DE">Aktiviern Sie diese Option, wenn Sie Mapp Intelligence nur mit der ausdrücklichen Genehmigung des Users im Shopware 6 Consent Manager nutzen wollen. Gibt der Nutzer die Zustimmung nicht, so werden keine Daten erhoben.</helpText>
-            <helpText>With this option activated, no data is tracked unless the visitor consents via Shopware 6 Cookie Consent manager.</helpText>
+            <helpText lang="de-DE">Lassen Sie diese Option aktiviert, wenn Sie ein Opt-in des Nutzers über den Shopware 6 Consent Manager wünschen. Gibt der Nutzer keine ausdrückliche Einwilligung zur Nachverfolgung, werden keine Daten erhoben. Sie können die Option deaktivieren, wenn Sie ein eigenes Consent Management System nutzen.</helpText>
+            <helpText>Leave this option activated if users need to opt-in to tracking via the Shopware cookie consent manager. In that case, Mapp will not collect any data without the explicit consent of the user. Deactivate this option if you use your own consent management platform.</helpText>
         </input-field>
     </card>
 </config>
