@@ -1,6 +1,6 @@
 {
     "name": "mapp/intelligence",
-    "description": "Mapp Intelligence tracking",
+    "description": "Add your Mapp Intelligence account ID and start tracking. The plugin adds the tracking script and data layer for your customer insights dashboard automatically.",
     "version": "v1.0.2",
     "type": "shopware-platform-plugin",
     "license": "proprietary",
@@ -20,8 +20,8 @@
             "en-GB": "Mapp Intelligence"
         },
         "description": {
-            "de-DE": "Mapp Intelligence tiLoader",
-            "en-GB": "Mapp Intelligence tiLoader"
+            "de-DE": "Geben Sie Ihre Mapp Intelligence-Konto-ID an und starten Sie das Tracking. Das Plugin fügt das Tracking-Skript und den Data Layer für Ihr Customer Insights-Dashboard automatisch hinzu.",
+            "en-GB": "Add your Mapp Intelligence account ID and start tracking. The plugin adds the tracking script and data layer for your customer insights dashboard automatically."
         },
         "plugin-icon": "src/Resources/config/MappIcon.png",
         "copyright": "(c) by Mapp Digital",
@@ -51,6 +51,10 @@
         "test:6.2": [
             "Composer\\Config::disableProcessTimeout",
             "bash ./helper/run_test.sh -v 6.2"
+        ],
+        "test:6.2:keep": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh -v 6.2 -k"
         ],
         "test:jenkins:latest": [
             "Composer\\Config::disableProcessTimeout",

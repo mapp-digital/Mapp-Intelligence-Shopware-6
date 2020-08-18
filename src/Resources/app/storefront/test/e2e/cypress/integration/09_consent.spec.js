@@ -46,7 +46,7 @@ describe('MappIntelligencePluginTests: Cookie Consent Manager', () => {
                 expect(win.wts).to.not.exist;
             });
         cy.get('.js-cookie-configuration-button button').click({force:true});
-        cy.contains('Cookie Preferences').should('be.visible');
+        cy.get('.offcanvas-cookie').should('be.visible');
         cy.contains('Mapp Intelligence').should('be.visible');
 
         cy.loginViaApi()
@@ -63,7 +63,7 @@ describe('MappIntelligencePluginTests: Cookie Consent Manager', () => {
                 expect(win.wts).to.exist;
             });
         cy.get('.js-cookie-configuration-button button').click({force:true});
-        cy.contains('Cookie Preferences').should('be.visible');
+        cy.get('.offcanvas-cookie').should('be.visible');
         cy.contains('Mapp Intelligence').should('not.be.visible');
     });
 });

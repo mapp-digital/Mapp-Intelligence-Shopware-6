@@ -1,3 +1,5 @@
+const ProductFixture = require("../service/product.fixture");
+
 /**
  * Creates a product
  * @memberOf Cypress.Chainable#
@@ -5,8 +7,6 @@
  * @function
  * @param {Object} productData - Data to base the product on
  */
-const ProductFixture = require("../service/product.fixture");
-
 Cypress.Commands.add('createProduct', (productData = {}) => {
     const fixture = new ProductFixture();
     fixture.setProductFixture(productData).then(()=>{});
