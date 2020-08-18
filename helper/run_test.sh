@@ -2,6 +2,7 @@
 
 # add -v 6.2 or -v 6.3 to test a specific version, otherwise the script will checkout the latest version of the dev repo
 # add -j to activate Jenkins mode - 2 port bindings (8080 and 8005) will be deleted from docker-compose.yml
+# add -k if you don't want to delete the instance afterwards
 
 argversion="latest"
 jenkins=0
