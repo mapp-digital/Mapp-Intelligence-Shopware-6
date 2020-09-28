@@ -58,11 +58,11 @@
         ],
         "test:jenkins:latest": [
             "Composer\\Config::disableProcessTimeout",
-            "bash ./helper/run_test.sh -j"
+            "bash ./helper/run_test.sh -j 1"
         ],
         "test:jenkins:6.2": [
             "Composer\\Config::disableProcessTimeout",
-            "bash ./helper/run_test.sh -v 6.2 -j"
+            "bash ./helper/run_test.sh -v 6.2 -j 1"
         ]
     }
 }
