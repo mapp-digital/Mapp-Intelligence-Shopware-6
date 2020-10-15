@@ -1,0 +1,206 @@
+{% sw_extends '@Storefront/storefront/layout/meta.html.twig' %}
+
+{% block layout_head_meta_tags_charset %}
+    {{ parent() }}
+
+    {% block _ti %}
+        <script>
+            window._ti =  window._ti || {};
+            {% if mappInclude('pageName') %}window._ti.pageName = location.host + location.pathname;{% endif %}
+            {% if mappInclude('pageTitle') %}window._ti.pageTitle = '{{ metaInformation.metaTitle|e('js') }}';{% endif %}
+
+            {% if context.customer != null %}
+                {% if mappInclude('customerId') %}window._ti.customerId = '{{ context.customer.id|e('js') }}';{% endif %}
+                {% if mappInclude('eMailSubscription') %}window._ti.eMailSubscription = '{{ context.customer.newsletter ? '1' : '2' }}';{% endif %}
+                {% if mappInclude('gender') and context.customer.salutation.salutationKey != null %}window._ti.gender = '{{ getGender(context.customer.salutation.salutationKey) }}';{% endif %}
+                {% if mappInclude('age') and context.customer.birthday != null %}window._ti.age = '{{ getAge(context.customer.birthday) }}';{% endif %}
+            {% endif %}
+
+            {% if activeRoute == 'frontend.home.page' %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Home';{% endif %}
+
+                {% if page.cmsPage.type == 'product_list' %}
+                    {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Product Overview';{% endif %}
+                    {% if mappInclude('pageNumber') %}window._ti.pageNumber = {{ getPageNumber()|raw }};{% endif %}
+                {% endif %}
+            {% endif %}
+
+            {% if activeRoute == 'frontend.navigation.page' %}
+                {% if page.cmsPage.type == 'landingpage' %}
+                    {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Content';{% endif %}
+                    {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Landing Page';{% endif %}
+                {% endif %}
+                {% if page.cmsPage.type == 'product_list' %}
+                    {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Catalogue';{% endif %}
+                    {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Product Overview';{% endif %}
+                    {% if mappInclude('pageNumber') %}window._ti.pageNumber = {{ getPageNumber()|raw }};{% endif %}
+                {% endif %}
+                {% if page.cmsPage.type == 'page' %}
+                    {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Content';{% endif %}
+                {% endif %}
+            {% endif %}
+
+            {% if activeRoute == 'frontend.search.page' %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Catalogue';{% endif %}
+                {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Internal Search';{% endif %}
+                {% if mappInclude('pageNumber') %}window._ti.pageNumber = {{ getPageNumber()|raw }};{% endif %}
+                {% if mappInclude('internalSearch') %}window._ti.internalSearch = '{{ page.searchTerm|e('js') }}';{% endif %}
+                {% if mappInclude('numberOfSearchResults') %}window._ti.numberOfSearchResults = '{{ page.listing.total }}';{% endif %}
+            {% endif %}
+
+            {% if 'frontend.account' in activeRoute %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Account';{% endif %}
+            {% endif %}
+
+            {% if activeRoute == 'frontend.detail.page' %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Catalogue';{% endif %}
+                {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Product Detail';{% endif %}
+                {% if mappInclude('productCost') %}window._ti.productCost = '{{ page.product.calculatedListingPrice.to.unitPrice }}';{% endif %}
+                {% if mappInclude('productId') %}window._ti.productId = '{{  page.product.productNumber|e('js') }}';{% endif %}
+                {% if mappInclude('productShopwareId') %}window._ti.productShopwareId = '{{  page.product.id }}';{% endif %}
+                {% if mappInclude('productName') %}window._ti.productName = '{{ page.product.translated.name|e('js') }}';{% endif %}
+                {% if mappInclude('productQuantity') %}window._ti.productQuantity = '1';{% endif %}
+                {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'view';{% endif %}
+                {% if mappInclude('productSoldOut') %}window._ti.productSoldOut = '{{ page.product.availableStock <= 0 ? '1' : '' }}';{% endif %}
+                {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
+                {% if mappInclude('productCategories') %}window._ti.productCategories = JSON.parse('{{ getCategoryNames(page.product.categoryTree)|e('js')|json_encode|e('js') }}');{% endif %}
+                if(window._ti.productCategories && window._ti.productCategories[0]) {
+                    {% if mappInclude('productCategory') %}window._ti.productCategory = window._ti.productCategories[0];{% endif %}
+                }
+                if(window._ti.productCategories && window._ti.productCategories[1]) {
+                    {% if mappInclude('productSubCategory') %}window._ti.productSubCategory = window._ti.productCategories[1];{% endif %}
+                }
+            {% endif %}
+
+            {% if activeRoute == 'frontend.checkout.finish.page' %}
+                {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
+
+                {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'conf';{% endif %}
+                {% if mappInclude('orderId') %}window._ti.orderId = '{{ page.order.orderNumber|e('js') }}';{% endif %}
+                {% if mappInclude('totalOrderValue') %}window._ti.totalOrderValue = '{{ page.order.amountTotal }}';{% endif %}
+
+                {% if mappInclude('affiliateCode') and page.order.affiliateCode %}window._ti.affiliateCode = '{{ page.order.affiliateCode|e('js') }}';{% endif %}
+                {% if mappInclude('campaignCode') and page.order.campaignCode %}window._ti.campaignCode = '{{ page.order.campaignCode|e('js') }}';{% endif %}
+            {% endif %}
+
+            {% if activeRoute == 'frontend.checkout.finish.page' or controllerAction == 'checkoutRegisterPage' or controllerAction == 'confirmPage' %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Checkout';{% endif %}
+                {% if mappInclude('products') %}window._ti.products = [];{% endif %}
+                {% for product in attribute(page, (activeRoute == 'frontend.checkout.finish.page' ? 'order' : 'cart')).lineItems %}
+                    {% if product.type == 'promotion' and product.totalPrice %}
+                        {% if mappInclude('couponValue') %}
+                            if(window._ti.couponValue) {
+                                    window._ti.couponValue = parseFloat(window._ti.couponValue) + {{ product.totalPrice * -1 }} + '';
+                                } else {
+                                    window._ti.couponValue = {{ product.totalPrice * -1 }} + '';
+                                }
+                        {% endif %}
+                    {% else %}
+                        if(window._ti.products) {
+                            window._ti.products[{{ loop.index0 }}] = {};
+                            {% if mappInclude('productCost') %}window._ti.products[{{ loop.index0 }}].productCost = "{{ product.price.unitPrice }}";{% endif %}
+                            {% if mappInclude('productId') %}window._ti.products[{{ loop.index0 }}].productId = "{{ product.payload.productNumber|e('js') }}";{% endif %}
+                            {% if mappInclude('productShopwareId') %}window._ti.products[{{ loop.index0 }}].productShopwareId = "{{ product.productId }}";{% endif %}
+                            {% if mappInclude('productName') %}window._ti.products[{{ loop.index0 }}].productName = "{{ product.label|e('js') }}";{% endif %}
+                            {% if mappInclude('productQuantity') %}window._ti.products[{{ loop.index0 }}].productQuantity = "{{ product.quantity }}";{% endif %}
+                            {% if mappInclude('productSoldOut') %}window._ti.products[{{ loop.index0 }}].productSoldOut = '{{ getSoldOutStatus(product.productId|e('js')) }}';{% endif %}
+                            {% if mappInclude('productCategories') %}window._ti.products[{{ loop.index0 }}].productCategories = JSON.parse('{{ getCategoryNames(product.payload.categoryIds)|json_encode|e('js') }}');{% endif %}
+                        }
+                    {% endif %}
+                {% endfor %}
+                if(window._ti.products) {
+                    (function(){
+                        var _p = []; // re-index in case of promotions
+                        for(var i = 0; i < window._ti.products.length; i++) {
+                            if(window._ti.products[i] !== undefined) {
+                                _p.push(window._ti.products[i]);
+                            }
+                        }
+                        window._ti.products = _p;
+                    }());
+                    (function(){
+                        var productKeys = (function(obj) {
+                            var r = [];
+                            for (var k in obj) {
+                                if (!obj.hasOwnProperty(k)) {
+                                    continue;
+                                }
+                                r.push(k);
+                            }
+                            return r;
+                        })(window._ti.products[0]);
+                        for(var i = 0; i < productKeys.length; i++) {
+                            var productKey = productKeys[i];
+                            window._ti[productKey] = '';
+                            for(var j = 0; j < window._ti.products.length; j++) {
+                                var product = window._ti.products[j];
+                                if(typeof product[productKey] === 'string') {
+                                    window._ti[productKey] += (j > 0 ? ';': '') + product[productKey];
+                                } else if(Object.prototype.toString.call(product[productKey]) === "[object Array]") {
+                                    window._ti[productKey] = window._ti[productKey] || [];
+                                    var maxLength = (function(products) { //
+                                        var maxLength = 0;
+                                        for(var k = 0; k < products.length; k++) {
+                                            if(maxLength < products[k][productKey].length) {
+                                                maxLength = products[k][productKey].length;
+                                            }
+                                        }
+                                        return maxLength;
+                                    })(window._ti.products);
+                                    if(j === 0) {
+                                        for(var k = 0; k < maxLength; k++) { //init
+                                            window._ti[productKey][k] = '';
+                                        }
+                                    }
+                                    for(k = 0; k < maxLength; k++) { // add values
+                                        window._ti[productKey][k] = window._ti[productKey][k] +
+                                            (j > 0 ? ';' : '') +
+                                            (product[productKey][k] !== undefined ? product[productKey][k] : '');
+                                    }
+                                }
+                            }
+                        }
+                    })();
+                }
+                if(window._ti.productCategories && window._ti.productCategories[0]) {
+                    {% if mappInclude('productCategory') %}window._ti.productCategory = window._ti.productCategories[0];{% endif %}
+                }
+                if(window._ti.productCategories && window._ti.productCategories[1]) {
+                    {% if mappInclude('productSubCategory') %}window._ti.productSubCategory = window._ti.productCategories[1];{% endif %}
+                }
+                {% if controllerAction == 'checkoutRegisterPage' or controllerAction == 'confirmPage' %}
+                    // put product info under cart, so no product view goes out
+                    window._ti.cart = {};
+                    (function(){
+                        var productKeys = [];
+                        var _r = /^product.*/;
+                        for(var key in window._ti){
+                            if(window._ti.hasOwnProperty(key) && _r.test(key)) {
+                                productKeys.push(key);
+                            }
+                        }
+                        for(var i=0;i<productKeys.length; i++) {
+                            var k = productKeys[i];
+                            window._ti.cart[k] = window._ti[k];
+                            delete window._ti[k];
+                        }
+                    }());
+                {% endif %}
+            {% endif %}
+        </script>
+    {% endblock %}
+
+    {% block ti_loader_snippet %}
+        <script type="text/javascript">
+            window._tiConfig = window._tiConfig || {
+                tiDomain: "{{ mappIntelligence.tiDomain|sw_sanitize }}",
+                tiId: "{{ mappIntelligence.tiId|sw_sanitize }}",
+                option: {}
+            };
+            if(document.cookie.indexOf('sw_MappIntelligence') !== -1 || {{ mappIntelligence.consent ? 'false' : 'true' }}) {
+                (function(a,d,c,f){a.wts=a.wts||[];var g=function(b){var a="";b.customDomain&&b.customPath?a=b.customDomain+"/"+b.customPath:b.tiDomain&&b.tiId&&(a=b.tiDomain+"/resp/api/get/"+b.tiId+"?url="+encodeURIComponent("https://"+d.location.host+"/")+"&v=5");if(b.option)for(var c in b.option)a+="&"+c+"="+encodeURIComponent(b.option[c]);return a};if(-1===d.cookie.indexOf("wt_r=1")){var e=d.getElementsByTagName(c)[0];c=d.createElement(c);c.async=!0;c.onload=function(){if("undefined"!==typeof a.wt_r&&!isNaN(a.wt_r)){var b=
+                    new Date,c=b.getTime()+1E3*parseInt(a.wt_r);b.setTime(c);d.cookie="wt_r=1;path=/;expires="+b.toUTCString()}};c.onerror=function(){"undefined"!==typeof a.wt_mcp_hide&&"function"===typeof a.wt_mcp_hide.show&&(a.wt_mcp_hide.show(),a.wt_mcp_hide.show=function(){})};c.src="//"+g(f);e.parentNode.insertBefore(c,e)}})(window,document,"script",_tiConfig);
+            }
+        </script>
+    {% endblock %}
+{% endblock %}

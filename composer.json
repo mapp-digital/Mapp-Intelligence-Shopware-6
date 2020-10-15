@@ -1,0 +1,68 @@
+{
+    "name": "mapp/intelligence",
+    "description": "Add your Mapp Intelligence account ID and start tracking. The plugin adds the tracking script and data layer for your customer insights dashboard automatically.",
+    "version": "v1.0.3",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Mapp Digital",
+            "homepage": "https://mapp.com"
+        }
+    ],
+    "require": {
+        "shopware/core": "*"
+    },
+    "extra": {
+        "shopware-plugin-class": "Mapp\\MappIntelligence\\MappIntelligence",
+        "label": {
+            "de-DE": "Mapp Intelligence",
+            "en-GB": "Mapp Intelligence"
+        },
+        "description": {
+            "de-DE": "Geben Sie Ihre Mapp Intelligence-Konto-ID an und starten Sie das Tracking. Das Plugin fügt das Tracking-Skript und den Data Layer für Ihr Customer Insights-Dashboard automatisch hinzu.",
+            "en-GB": "Add your Mapp Intelligence account ID and start tracking. The plugin adds the tracking script and data layer for your customer insights dashboard automatically."
+        },
+        "plugin-icon": "src/Resources/config/MappIcon.png",
+        "copyright": "(c) by Mapp Digital",
+        "manufacturerLink": {
+            "de-DE": "https://mapp.com",
+            "en-GB": "https://mapp.com"
+        },
+        "supportLink": {
+            "de-DE": "https://docs.mapp.com/",
+            "en-GB": "https://docs.mapp.com/"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Mapp\\MappIntelligence\\": "src/"
+        }
+    },
+    "scripts": {
+        "test:latest": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh"
+        ],
+        "test:latest:keep": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh -k"
+        ],
+        "test:6.2": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh -v 6.2"
+        ],
+        "test:6.2:keep": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh -v 6.2 -k"
+        ],
+        "test:jenkins:latest": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh -j"
+        ],
+        "test:jenkins:6.2": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh -v 6.2 -j"
+        ]
+    }
+}

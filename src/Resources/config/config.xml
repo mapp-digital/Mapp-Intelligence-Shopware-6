@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title lang="de-DE">Mapp Intelligence tiLoader</title>
+        <title>Mapp Intelligence tiLoader</title>
+        <input-field type="text">
+            <name>tiId</name>
+            <label lang="de-DE">tiId</label>
+            <label>tiId</label>
+            <helpText lang="de-DE">tiId eingeben</helpText>
+            <helpText>Enter your tiId</helpText>
+            <placeholder lang="de-DE">111111111111111</placeholder>
+            <placeholder>111111111111111</placeholder>
+            <copyable>true</copyable>
+        </input-field>
+        <input-field type="text">
+            <name>tiDomain</name>
+            <label lang="de-DE">tiDomain</label>
+            <label>tiDomain</label>
+            <helpText lang="de-DE">tiDomain eingeben</helpText>
+            <helpText>Enter your tiDomain or keep empty, if you don't have your own tiDomain</helpText>
+            <placeholder lang="de-DE">responder.wt-safetag.com</placeholder>
+            <placeholder>responder.wt-safetag.com</placeholder>
+            <copyable>true</copyable>
+        </input-field>
+        <input-field type="text">
+        <name>blacklist</name>
+            <label lang="de-DE">Ausschluss aus dem dataLayer</label>
+            <label>Attribute blacklist</label>
+            <helpText lang="de-DE">Datalayer Keys eingeben, die unterdrückt werden sollen (Komma-separiert)</helpText>
+            <helpText>Please indicate any attribute you do not want to display in your data layer (comma-separated)</helpText>
+            <copyable>true</copyable>
+        </input-field>
+        <input-field type="checkbox">
+            <name>consent</name>
+            <defaultValue>true</defaultValue>
+            <label lang="de-DE">Mapp Intelligence im Shopware 6 Cookie Consent Manager auflisten</label>
+            <label>List Mapp Intelligence in Shopware 6 Cookie Consent Manager</label>
+            <helpText lang="de-DE">Lassen Sie diese Option aktiviert, wenn Sie ein Opt-in des Nutzers über den Shopware 6 Consent Manager wünschen. Gibt der Nutzer keine ausdrückliche Einwilligung zur Nachverfolgung, werden keine Daten erhoben. Sie können die Option deaktivieren, wenn Sie ein eigenes Consent Management System nutzen.</helpText>
+            <helpText>Leave this option activated if users need to opt-in to tracking via the Shopware cookie consent manager. In that case, Mapp will not collect any data without the explicit consent of the user. Deactivate this option if you use your own consent management platform.</helpText>
+        </input-field>
+    </card>
+</config>

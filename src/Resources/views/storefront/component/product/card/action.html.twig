@@ -1,0 +1,13 @@
+{% sw_extends '@Storefront/storefront/component/product/card/action.html.twig' %}
+
+{# Normal products #}
+{% block component_product_box_action_form %}
+    {{ parent() }}
+    {% sw_include '@Storefront/storefront/mapp/product-data.html.twig' %}
+{% endblock %}
+
+{# Variants #}
+{% block component_product_box_action_detail %}
+        {{ parent() }}
+    {% sw_include '@Storefront/storefront/mapp/product-data.html.twig' %}
+{% endblock %}
