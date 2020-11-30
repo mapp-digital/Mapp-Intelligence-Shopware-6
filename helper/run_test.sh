@@ -128,6 +128,8 @@ docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "
 docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "apt-get install -y xvfb"
 
 log_on_cmd "npm install Cypress in Shopware6 docker container"
+docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /home/appuser && mkdir .cache"
+docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /home/appuser/.cache && mkdir Cypress"
 docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e/ && npm i"
 
 log_on_cmd  "Install cypress"
