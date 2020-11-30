@@ -120,6 +120,10 @@ if [ "$keep" -eq "0" ]; then
     docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "rm -R -f /.composer/cache/files"
 fi
 
+# ToDo: create directory dynamicly `$(id -gn)`
+log_on_cmd "Create user home directory"
+docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "mkhomedir_helper appuser"
+
 log_on_cmd "Installing Shopware6 inside Docker container..."
 docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "./psh.phar install"
 
@@ -128,15 +132,13 @@ docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "
 docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "apt-get install -y xvfb"
 
 log_on_cmd "npm install Cypress in Shopware6 docker container"
-docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /home/appuser && mkdir .cache"
-docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /home/appuser/.cache && mkdir Cypress"
 docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e/ && npm i"
 
 log_on_cmd  "Install cypress"
 docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e/ && node_modules/.bin/cypress install"
 
 log_on_cmd "Give public.pem and private.pem to application"
-docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/config/jwt/ && chown application public.pem && chown application private.pem"
+docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/config/jwt/ && chown ${USER_GROUP_ID} public.pem && chown ${USER_GROUP_ID} private.pem"
 
 log_on_cmd "Install and activate MappIntelligence Plugin via console"
 docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" bash -c "./bin/console plugin:install MappIntelligence"
