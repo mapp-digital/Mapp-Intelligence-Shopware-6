@@ -39,15 +39,24 @@ describe('MappIntelligencePluginTests: Homepage', () => {
     });
 
     it('switch sorting', () => {
+        let data;
+        const func = (d) => {
+            data = d;
+        };
+
         cy.window().then((win) => {
-            cy.stub(win.wts, 'push').as('wts')
+            cy.stub(win.wts, 'push', func).as('wts')
         });
 
         cy.get('.sorting.custom-select')
             .select('price-desc');
 
         cy.get('@wts')
-            .should('be.calledWith', ['send', 'click', { linkId: 'Sorting: Price, descending' }])
+            .then(() => {
+                expect(data[0]).to.equal('send');
+                expect(data[1]).to.equal('click');
+                expect(data[2].linkId).to.match(/.*sorting.*price.*/ig);
+            })
             .and('be.calledOnce');
     });
 });

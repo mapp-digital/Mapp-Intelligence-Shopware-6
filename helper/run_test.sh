@@ -120,9 +120,8 @@ if [ "$keep" -eq "0" ]; then
     docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "rm -R -f /.composer/cache/files"
 fi
 
-# ToDo: create directory dynamicly `$(id -gn)`
 log_on_cmd "Create user home directory"
-docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "mkhomedir_helper appuser"
+docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "mkhomedir_helper ${USER_GROUP_ID}"
 
 log_on_cmd "Installing Shopware6 inside Docker container..."
 docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "./psh.phar install"
