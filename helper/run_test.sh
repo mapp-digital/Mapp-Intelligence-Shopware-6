@@ -107,6 +107,8 @@ log_on_cmd "Copy plugin into Shopware..."
 mkdir ./shopware-test/custom/plugins/MappIntelligence
 cp ./composer.json ./shopware-test/custom/plugins/MappIntelligence
 cp ./CHANGELOG.md ./shopware-test/custom/plugins/MappIntelligence
+cp ./helper/mkhomedir.sh ./shopware-test/mkhomedir.sh
+chmod u+x ./shopware-test/mkhomedir.sh
 cp -r ./src ./shopware-test/custom/plugins/MappIntelligence
 
 log_on_cmd "Copy test-data plugin into Shopware"
@@ -121,7 +123,7 @@ if [ "$keep" -eq "0" ]; then
 fi
 
 log_on_cmd "Create user home directory"
-docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "mkhomedir_helper ${USER_GROUP_ID}"
+docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "/app/mkhomedir.sh ${USER_ID}"
 
 log_on_cmd "Installing Shopware6 inside Docker container..."
 docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "./psh.phar install"
