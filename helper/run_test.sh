@@ -15,7 +15,7 @@ USER_GROUP_ID="${USER_ID}:${GROUP_ID}"
 log_on_cmd()
 {
   printf "#########################################\n"
-  echo "### $1"
+  echo "### $1 ###"
   printf "#########################################\n"
 }
 
@@ -86,6 +86,9 @@ if [ "$argversion" == "latest" ]
         log_on_cmd "@@@Version: $version"
         git checkout tags/"${version}" && cd ..
 fi
+
+SHOPWARE_VERSION=$(node -p "require('./shopware-test/composer.json').require['shopware/platform']")
+log_on_cmd "Installed Shopware version >> ${SHOPWARE_VERSION}"
 
 #Jenkins mode logic
 if [ "$jenkins" -eq "1" ]; then
