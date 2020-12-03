@@ -55,7 +55,7 @@ describe('MappIntelligencePluginTests: Homepage', () => {
             .then(() => {
                 expect(data[0]).to.equal('send');
                 expect(data[1]).to.equal('click');
-                expect(data[2].linkId).to.match(/.*sorting.*price.*/ig);
+                expect(data[2].linkId).to.match(/.*sortting.*price.*/ig);
             })
             .and('be.calledOnce');
     });
