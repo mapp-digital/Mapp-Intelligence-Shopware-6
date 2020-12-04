@@ -10,13 +10,14 @@ describe('MappIntelligencePluginTests: Cookie Consent Manager', () => {
     });
 
     it('track request after consent', () => {
-         cy.visit('/');
+        cy.visit('/');
         cy.window()
             .then((win) => {
                 expect(win.wts).to.not.exist;
             });
         cy.get('.js-cookie-configuration-button button').click({force:true});
         cy.contains('Mapp Intelligence').click();
+        cy.wait(2000);
         cy.contains('Save').click();
         cy.window()
             .then((win) => {
