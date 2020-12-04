@@ -1,9 +1,9 @@
 {
     "name": "mapp/intelligence",
     "description": "Add your Mapp Intelligence account ID and start tracking. The plugin adds the tracking script and data layer for your customer insights dashboard automatically.",
-    "version": "v1.0.3",
+    "version": "v1.0.4",
     "type": "shopware-platform-plugin",
-    "license": "proprietary",
+    "license": "MIT",
     "authors": [
         {
             "name": "Mapp Digital",
