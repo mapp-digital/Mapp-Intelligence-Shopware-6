@@ -53,7 +53,8 @@ describe('MappIntelligencePluginTests: Add-to-Cart', () => {
                 calls++;
             }).as('wts');
         });
-        cy.contains('Add to shopping cart').click();
+
+        cy.contains('Add to shopping cart', {timeout: 15 * 60 * 1000}).click();
         cy.wait('@addToCart').then(() => {
             expect(wts).to.be.calledTwice;
         });
