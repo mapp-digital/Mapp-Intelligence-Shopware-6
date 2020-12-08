@@ -34,6 +34,7 @@ describe('MappIntelligencePluginTests: Add-to-Cart', () => {
         });
     });
 
+    /*
     it('datalayer during add-to-cart event', () => {
         let wts;
 
@@ -63,4 +64,5 @@ describe('MappIntelligencePluginTests: Add-to-Cart', () => {
             expect(wts).to.be.calledTwice;
         });
     });
+    */
 });
