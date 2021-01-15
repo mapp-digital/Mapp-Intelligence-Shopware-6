@@ -38,6 +38,11 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         if(!isset($config['tiId'])) {
             $config['tiId'] = '111111111111111';
         }
+        if(isset($config['acquire']) && preg_match('/id=(\d+?)&m=(\d+?)\D/', $config['acquire'], $ids)) {
+            $config['acquire'] = 'https://c.flx1.com/' . $ids[2] . '-' . $ids[1] .'.js?id=' . $ids[1] . '&m=' . $ids[2];
+        } else {
+            $config['acquire'] = '';
+        }
 
         //TODO make this configurable
         $config['v'] = 5;

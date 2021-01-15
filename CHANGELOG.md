@@ -6,3 +6,6 @@
 - Use Cookie Consent Manager
 # 1.0.3
 - Make usage of Cookie Consent Manager optional
+# 1.0.4
+- Rename to Mapp Cloud
+- Implement Mapp Acquire
