@@ -16,7 +16,7 @@ describe('MappIntelligencePluginTests: Cookie Consent Manager', () => {
                 expect(win.wts).to.not.exist;
             });
         cy.get('.js-cookie-configuration-button button').click({force:true});
-        cy.contains('Mapp Intelligence').click();
+        cy.contains('Mapp Cloud').click();
         cy.wait(2000);
         cy.contains('Save').click();
         cy.window()
@@ -48,13 +48,13 @@ describe('MappIntelligencePluginTests: Cookie Consent Manager', () => {
             });
         cy.get('.js-cookie-configuration-button button').click({force:true});
         cy.get('.offcanvas-cookie').should('be.visible');
-        cy.contains('Mapp Intelligence').should('be.visible');
+        cy.contains('Mapp Cloud').should('be.visible');
 
         cy.loginViaApi()
             .then(() => {
                 cy.visit('/admin#/sw/plugin/settings/MappIntelligence');
             });
-        cy.contains('List Mapp Intelligence in Shopware 6 Cookie Consent Manager').click();
+        cy.contains('List Mapp Cloud in Shopware 6 Cookie Consent Manager').click();
         cy.get('.sw-field--checkbox__content input[type=checkbox]').uncheck();
         cy.get('.sw-plugin-config__save-action').click();
         cy.wait('@saveData');
@@ -65,6 +65,6 @@ describe('MappIntelligencePluginTests: Cookie Consent Manager', () => {
             });
         cy.get('.js-cookie-configuration-button button').click({force:true});
         cy.get('.offcanvas-cookie').should('be.visible');
-        cy.contains('Mapp Intelligence').should('not.be.visible');
+        cy.contains('Mapp Cloud').should('not.be.visible');
     });
 });

@@ -16,8 +16,8 @@
     "extra": {
         "shopware-plugin-class": "Mapp\\MappIntelligence\\MappIntelligence",
         "label": {
-            "de-DE": "Mapp Intelligence",
-            "en-GB": "Mapp Intelligence"
+            "de-DE": "Mapp Cloud",
+            "en-GB": "Mapp Cloud"
         },
         "description": {
             "de-DE": "Geben Sie Ihre Mapp Intelligence-Konto-ID an und starten Sie das Tracking. Das Plugin fügt das Tracking-Skript und den Data Layer für Ihr Customer Insights-Dashboard automatisch hinzu.",

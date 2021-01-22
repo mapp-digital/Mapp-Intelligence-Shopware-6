@@ -8,9 +8,9 @@ describe('MappIntelligencePluginTests: Install and Config', () => {
             .then(() => {
                 cy.visit('/admin#/sw/plugin/index/list');
             });
-        cy.contains('Mapp Intelligence', {timeout: 100000}).should('be.visible');
+        cy.contains('Mapp Cloud', {timeout: 100000}).should('be.visible');
         cy.get('.sw-data-grid__body > tr').each( (el) => {
-            if(/^Mapp Intelligence/.test(el[0].innerText)) {
+            if(/^Mapp Cloud/.test(el[0].innerText)) {
                 _pluginRowNumber = el[0].className.slice(-1);
             }
         })
