@@ -9,3 +9,5 @@
 # 1.0.4
 - Rename to Mapp Cloud
 - Implement Mapp Acquire
+# 1.0.5
+- Add option to set Mapp cookie as technically necessary

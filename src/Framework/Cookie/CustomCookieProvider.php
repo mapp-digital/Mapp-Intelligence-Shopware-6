@@ -20,7 +20,8 @@ class CustomCookieProvider implements CookieProviderInterface {
         $this->systemConfigService = $systemConfigService;
     }
 
-    private const singleCookie = [
+    private $mappCookie = [
+        'isRequired' => false,
         'snippet_name' => 'mapp.mappIntelligence.displayName',
         'snippet_description' => 'mapp.mappIntelligence.description',
         'cookie' => 'sw_MappIntelligence',
@@ -33,7 +34,9 @@ class CustomCookieProvider implements CookieProviderInterface {
     {
 
         $config = $this->systemConfigService->get('MappIntelligence.config');
-        $omitConsent = false;
+        if(isset($config['required']) && $config['required'] === true) {
+            $this->mappCookie['isRequired'] = true;
+        }
         if(isset($config['consent']) && $config['consent'] === false) {
             return array_merge(
                 $this->originalService->getCookieGroups(),
@@ -43,7 +46,7 @@ class CustomCookieProvider implements CookieProviderInterface {
         return array_merge(
             $this->originalService->getCookieGroups(),
             [
-                self::singleCookie
+                $this->mappCookie
             ]
         );
     }
