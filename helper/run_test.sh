@@ -120,6 +120,13 @@ cp -r ./helper/test-data-plugin/SwagPlatformDemoData ./shopware-test/custom/plug
 log_on_cmd "Installing Shopware6 Docker container..."
 cd shopware-test && ./psh.phar docker:start
 
+# Install composer2 in case of version 6.4
+if [ "$SHOPWARE_VERSION" = "6.4.x@dev || dev-trunk" ]; then
+    log_on_cmd "6.4 found - installing composer 2 in app container..."
+    docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "curl -sS https://getcomposer.org/installer -o composer-setup.php"
+    docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "php composer-setup.php --install-dir=/usr/local/bin --filename=composer"
+fi
+
 if [ "$keep" -eq "0" ]; then
     log_on_cmd "Clear composer cache inside app container..."
     docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "rm -R -f /.composer/cache/files"
@@ -148,19 +155,35 @@ log_on_cmd "Install and activate MappIntelligence Plugin via console"
 docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" bash -c "./bin/console plugin:install MappIntelligence"
 docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" bash -c "./bin/console plugin:activate MappIntelligence"
 
-log_on_cmd "Install and activate demo data Plugin via console"
-docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" bash -c "./bin/console plugin:install SwagPlatformDemoData"
-docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" bash -c "./bin/console plugin:activate SwagPlatformDemoData"
-
-log_on_cmd "Run the e2e tests"
-docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e/ && node_modules/.bin/cypress run"
-
-log_on_cmd "Copy test results..."
-cp -r ./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e/*.xml ./../test-results/
-if [[ -d "./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e/screenshots" ]]
-    then
-        cp -r ./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e/screenshots ./../test-results/
+if [ "$SHOPWARE_VERSION" != "6.4.x@dev || dev-trunk" ]; then
+    log_on_cmd "Install and activate demo data Plugin via console"
+    docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" bash -c "./bin/console plugin:install SwagPlatformDemoData"
+    docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" bash -c "./bin/console plugin:activate SwagPlatformDemoData"
 fi
+
+if [ "$SHOPWARE_VERSION" = "6.4.x@dev || dev-trunk" ]; then
+    log_on_cmd "Run the e2e tests for version 6.4"
+    docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e_64/ && node_modules/.bin/cypress run"
+
+    log_on_cmd "Copy test results..."
+    cp -r ./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e_64/*.xml ./../test-results/
+    if [[ -d "./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e_64/screenshots" ]]
+        then
+            cp -r ./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e_64/screenshots ./../test-results/
+    fi
+else
+    log_on_cmd "Run the e2e tests"
+    docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e/ && node_modules/.bin/cypress run"
+
+    log_on_cmd "Copy test results..."
+    cp -r ./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e/*.xml ./../test-results/
+    if [[ -d "./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e/screenshots" ]]
+        then
+            cp -r ./custom/plugins/MappIntelligence/src/Resources/app/storefront/test/app/build/artifacts/e2e/screenshots ./../test-results/
+    fi
+fi
+
+
 
 if [ "$keep" -eq "0" ]; then
     log_on_cmd "Delete Mysql volumes from within docker..."

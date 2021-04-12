@@ -28,13 +28,16 @@ export default class MappIntelligenceClientEvents extends Plugin {
             });
         });
 
-        const filterPlugins = [
+        let filterPlugins = [
             'FilterBoolean',
             'FilterMultiSelect',
             'FilterPropertySelect',
             'FilterRange',
-            'FilterRating'
+            'FilterRating',
+            'FilterRatingSelect'
         ];
+        const pluginList = window.PluginManager.getPluginList();
+        filterPlugins = filterPlugins.filter((filterType) => pluginList.hasOwnProperty(filterType));
         filterPlugins.forEach( (filterType) => {
             var filters = window.PluginManager.getPluginInstances(filterType);
             filters.forEach( (element) => {

@@ -2,7 +2,6 @@
 
 {% block layout_head_meta_tags_charset %}
     {{ parent() }}
-
     {% block _ti %}
         <script>
             window._ti =  window._ti || {};
@@ -23,6 +22,11 @@
                     {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Product Overview';{% endif %}
                     {% if mappInclude('pageNumber') %}window._ti.pageNumber = {{ getPageNumber()|raw }};{% endif %}
                 {% endif %}
+            {% endif %}
+
+            {% if controllerName == 'LandingPage' %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Content';{% endif %}
+                {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Landing Page';{% endif %}
             {% endif %}
 
             {% if activeRoute == 'frontend.navigation.page' %}
@@ -55,7 +59,7 @@
             {% if activeRoute == 'frontend.detail.page' %}
                 {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Catalogue';{% endif %}
                 {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Product Detail';{% endif %}
-                {% if mappInclude('productCost') %}window._ti.productCost = '{{ page.product.calculatedListingPrice.to.unitPrice }}';{% endif %}
+                {% if mappInclude('productCost') %}window._ti.productCost = '{{ page.product.calculatedListingPrice.to.unitPrice ?? page.product.calculatedPrice.unitPrice }}';{% endif %}
                 {% if mappInclude('productId') %}window._ti.productId = '{{  page.product.productNumber|e('js') }}';{% endif %}
                 {% if mappInclude('productShopwareId') %}window._ti.productShopwareId = '{{  page.product.id }}';{% endif %}
                 {% if mappInclude('productName') %}window._ti.productName = '{{ page.product.translated.name|e('js') }}';{% endif %}

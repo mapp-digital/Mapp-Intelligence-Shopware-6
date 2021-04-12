@@ -52,9 +52,17 @@
             "Composer\\Config::disableProcessTimeout",
             "bash ./helper/run_test.sh -v 6.2"
         ],
+        "test:6.3": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh -v 6.3"
+        ],
         "test:6.2:keep": [
             "Composer\\Config::disableProcessTimeout",
             "bash ./helper/run_test.sh -v 6.2 -k"
+        ],
+        "test:6.3:keep": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh -v 6.3 -k"
         ],
         "test:jenkins:latest": [
             "Composer\\Config::disableProcessTimeout",
@@ -63,6 +71,10 @@
         "test:jenkins:6.2": [
             "Composer\\Config::disableProcessTimeout",
             "bash ./helper/run_test.sh -v 6.2 -j 1"
+        ],
+        "test:jenkins:6.3": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash ./helper/run_test.sh -v 6.3 -j 1"
         ]
     }
 }
