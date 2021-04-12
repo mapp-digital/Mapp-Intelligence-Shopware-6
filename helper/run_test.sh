@@ -142,6 +142,20 @@ log_on_cmd "Install Cypress dependency 'xvfb' in Shopware6 app docker container.
 docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "apt-get update -y"
 docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "apt-get install -y xvfb"
 
+if [ "$SHOPWARE_VERSION" != "6.4.x@dev || dev-trunk" ]; then
+    log_on_cmd "npm install Cypress in Shopware6 docker container with 6.4 testsuite"
+    docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e_64/ && npm i"
+
+    log_on_cmd  "Install cypress"
+    docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e_64/ && node_modules/.bin/cypress install"
+else
+    log_on_cmd "npm install Cypress in Shopware6 docker container"
+    docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e/ && npm i"
+
+    log_on_cmd  "Install cypress"
+    docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e/ && node_modules/.bin/cypress install"
+fi
+
 log_on_cmd "npm install Cypress in Shopware6 docker container"
 docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "cd /app/custom/plugins/MappIntelligence/src/Resources/app/storefront/test/e2e/ && npm i"
 
