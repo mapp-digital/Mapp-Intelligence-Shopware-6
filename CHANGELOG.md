@@ -9,8 +9,8 @@
 # 1.0.4
 - Rename to Mapp Cloud
 - Implement Mapp Acquire
-<<<<<<< HEAD
-=======
 # 1.0.5
 - Add option to set Mapp cookie as technically necessary
->>>>>>> 5746e468d5ed6dd97c3f98ec974a7bc4199ea03c
+# 1.0.6
+- Fixes for Shopware 6.4: filter eventlistener, landingpage content category, product prices
+
