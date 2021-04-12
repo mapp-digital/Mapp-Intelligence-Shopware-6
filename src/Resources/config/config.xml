@@ -49,5 +49,13 @@
             <helpText lang="de-DE">Lassen Sie diese Option aktiviert, wenn Sie ein Opt-in des Nutzers über den Shopware 6 Consent Manager wünschen. Gibt der Nutzer keine ausdrückliche Einwilligung zur Nachverfolgung, werden keine Daten erhoben. Sie können die Option deaktivieren, wenn Sie ein eigenes Consent Management System nutzen.</helpText>
             <helpText>Leave this option activated if users need to opt-in to tracking via the Shopware cookie consent manager. In that case, Mapp will not collect any data without the explicit consent of the user. Deactivate this option if you use your own consent management platform.</helpText>
         </input-field>
+        <input-field type="checkbox">
+            <name>required</name>
+            <defaultValue>false</defaultValue>
+            <label lang="de-DE">Kennzeichnen Sie Mapp Cloud als technisch notwendig</label>
+            <label>Mark Mapp Cloud as technically necessary</label>
+            <helpText lang="de-DE">Wenn Sie den Consent Manager von Shopware nutzen, kennzeichen Sie Mapp Cloud mithilfe dieser Option als technisch notwendig. Aktivieren Sie diese Option bitte nur mit dem Einverständnis Ihres Datenschutzbeauftragten.</helpText>
+            <helpText>When using the Shopware consent manager, activating this option will mark Mapp Cloud as technically necessary. The user cannot opt-out of tracking in this case. Please only activate this option after consulting with your data privacy manager.</helpText>
+        </input-field>
     </card>
 </config>
