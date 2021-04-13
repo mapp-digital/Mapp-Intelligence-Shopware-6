@@ -138,6 +138,9 @@ docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "
 log_on_cmd "Installing Shopware6 inside Docker container..."
 docker exec -u "${USER_GROUP_ID}" "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "./psh.phar install"
 
+log_on_cmd "Create more demo data to make sure homepage has enough products for pagination to appear"
+docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "APP_ENV=prod ./bin/console framework:demodata"
+
 log_on_cmd "Install Cypress dependency 'xvfb' in Shopware6 app docker container..."
 docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "apt-get update -y"
 docker exec "$(docker ps -aqf 'name=shopware-test_app_server_1')" /bin/bash -c "apt-get install -y xvfb"
