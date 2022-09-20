@@ -30,6 +30,7 @@ class MappExtension extends AbstractExtension
             new TwigFunction('getCategoryNames', [$this, 'getCategoryNames']),
             new TwigFunction('getPageNumber', [$this, 'getPageNumber']),
             new TwigFunction('mappInclude', [$this, 'mappInclude'], ['needs_context' => true]),
+            new TwigFunction('getVersion', [$this, 'getVersion']),
             new TwigFunction('getGender', [$this, 'getGender']),
             new TwigFunction('getAge', [$this, 'getAge']),
             new TwigFunction('getSoldOutStatus', [$this, 'getSoldOutStatus'])
@@ -82,6 +83,12 @@ class MappExtension extends AbstractExtension
             return false;
         }
         return true;
+    }
+    public static function getVersion()
+    {
+        $path = dirname(__FILE__) . '/../../composer.json';
+        $packages = json_decode(file_get_contents($path), true);
+        return $packages["version"];
     }
 
 }

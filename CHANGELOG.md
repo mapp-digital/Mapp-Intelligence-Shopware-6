@@ -13,4 +13,6 @@
 - Add option to set Mapp cookie as technically necessary
 # 1.0.6
 - Fixes for Shopware 6.4: filter eventlistener, landingpage content category, product prices
+# 1.0.7
+- Add pixel statistics call
 
