@@ -16,5 +16,5 @@
 # 1.0.7
 - Add pixel statistics call
 # 1.1.0
-- Add support for Shopware 6.5, drop Support for 6.3 and lower
+- Add support for Shopware 6.5, drop support for 6.3 and lower
 
