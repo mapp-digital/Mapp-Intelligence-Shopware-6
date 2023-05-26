@@ -1,7 +1,7 @@
 {
     "name": "mapp/intelligence",
     "description": "Add your Mapp Intelligence account ID and start tracking. The plugin adds the tracking script and data layer for your customer insights dashboard automatically.",
-    "version": "1.0.7",
+    "version": "1.1.0",
     "type": "shopware-platform-plugin",
     "license": "MIT",
     "authors": [
@@ -11,7 +11,8 @@
         }
     ],
     "require": {
-        "shopware/core": "*"
+        "shopware/core": "^6.4|^6.5",
+        "shopware/storefront": "^6.4|^6.5"
     },
     "extra": {
         "shopware-plugin-class": "Mapp\\MappIntelligence\\MappIntelligence",
@@ -76,5 +77,10 @@
             "Composer\\Config::disableProcessTimeout",
             "bash ./helper/run_test.sh -v 6.3 -j 1"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/runtime": false
+        }
     }
 }

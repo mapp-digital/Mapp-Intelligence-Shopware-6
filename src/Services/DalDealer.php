@@ -1,25 +1,25 @@
 <?php declare(strict_types=1);
 
 namespace Mapp\MappIntelligence\Services;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 
 class DalDealer implements DalDealerInterface {
     /**
-     * @var EntityRepositoryInterface $productRepository
+     * @var EntityRepository $productRepository
      */
     private $productRepository;
 
     /**
-     * @var EntityRepositoryInterface $categoryRepository
+     * @var EntityRepository $categoryRepository
      */
     private $categoryRepository;
 
     private $trackData = array();
 
     public function __construct(
-        EntityRepositoryInterface $productRepository,
-        EntityRepositoryInterface $categoryRepository
+        EntityRepository $productRepository,
+        EntityRepository $categoryRepository
     )
     {
         $this->productRepository = $productRepository;
