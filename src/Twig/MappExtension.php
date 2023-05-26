@@ -86,9 +86,7 @@ class MappExtension extends AbstractExtension
     }
     public static function getVersion()
     {
-        $path = dirname(__FILE__) . '/../../composer.json';
-        $packages = json_decode(file_get_contents($path), true);
-        return $packages["version"];
+        return "1.1.0";
     }
 
 }
