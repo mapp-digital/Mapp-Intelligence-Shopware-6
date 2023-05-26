@@ -15,4 +15,6 @@
 - Fixes for Shopware 6.4: filter eventlistener, landingpage content category, product prices
 # 1.0.7
 - Add pixel statistics call
+# 1.1.0
+- Add support for Shopware 6.5, drop Support for 6.3 and lower
 

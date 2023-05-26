@@ -24,3 +24,6 @@ cypress-run:
 	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run"
 cypress-local:
 	cd ./E2E && if [ ! -d "./node_modules" ];then npm install;fi && docker-compose up -d && npm run test
+
+zip:
+	mkdir MappIntelligence && cp -r ./src ./MappIntelligence/src && cp ./composer.json ./MappIntelligence/composer.json && cp CHANGELOG.md ./MappIntelligence/CHANGELOG.md && cp ./LICENSE ./MappIntelligence/LICENSE && zip -r MappShopware.zip ./MappIntelligence && rm -rf ./MappIntelligence
