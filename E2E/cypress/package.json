@@ -1,0 +1,11 @@
+{
+  "name": "mapp-shopware-e2e-cypress-container-deps",
+  "version": "1.0.0",
+  "description": "Dependencies for Cypress Docker container",
+  "main": "nothing.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@shopware-ag/e2e-testsuite-platform": "^7.0.5"
+  }
+}

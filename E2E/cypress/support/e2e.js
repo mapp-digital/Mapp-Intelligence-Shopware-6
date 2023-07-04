@@ -14,7 +14,16 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
+require('@shopware-ag/e2e-testsuite-platform/cypress/support');
 import './commands';
+import './commands/commands';
+import './commands/customer';
+import './commands/products';
+import './commands/consentCookie';
+import './commands/shipment';
+import './commands/category';
+import './commands/promotion';
+import './commands/api';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

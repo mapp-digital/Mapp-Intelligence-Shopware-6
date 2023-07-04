@@ -1,8 +1,8 @@
 # Shopware 6 - Mapp Cloud Extension
 
 [Site](https://mapp.com/) |
-[Docs](https://docs.mapp.com/display/S6) |
-[Support](https://support.webtrekk.com/) |
+[Docs](https://documentation.mapp.com/1.0/en/shopware-6-19109849.html) |
+[Support](https://documentation.mapp.com/) |
 [Changelog](https://github.com/mapp-digital/Mapp-Intelligence-Shopware-6/blob/main/CHANGELOG.md)
 
 The Shopware 6 Mapp Cloud extension lets you implement Tag Integration in your Shopware 6 Storefront Shop. The plugin

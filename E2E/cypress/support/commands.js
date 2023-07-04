@@ -43,7 +43,7 @@ Cypress.Commands.add("testTrackRequest", () => {
 			)[1]
 		);
 		return {
-			params: Object.fromEntries(urlSearchParams.entries()),
+			...Object.fromEntries(urlSearchParams.entries()),
 			version: isSmartpixel ? "6" : "5",
 			pageName,
 		};
