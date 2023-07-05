@@ -14,6 +14,8 @@ stop-e2e:
 	cd ./E2E && docker-compose down
 daily:
 	make start-e2e && make cypress-install && make install && make activate && make cypress-run
+delete-image:
+	docker image rm dockware/play
 
 install:
 	docker exec -t shopware.test bash -c "./bin/console plugin:refresh && ./bin/console plugin:install MappIntelligence"
