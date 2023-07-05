@@ -9,11 +9,11 @@ module.exports = defineConfig({
   defaultCommandTimeout: 40000,
   pageLoadTimeout: 50000,
   video: false,
-  screenshotsFolder: '/results/screenshots',
-  videosFolder: '/results/videos',
+  screenshotsFolder: '/cypress/results/screenshots',
+  videosFolder: '/cypress/results/videos',
   reporter: 'junit',
   reporterOptions: {
-    mochaFile: '/results/output-[hash].xml',
+    mochaFile: '/cypress/results/output-[hash].xml',
     jenkinsMode: true,
   },
   e2e: {

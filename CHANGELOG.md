@@ -17,4 +17,6 @@
 - Add pixel statistics call
 # 1.1.0
 - Add support for Shopware 6.5, drop support for 6.3 and lower
+# 1.1.1
+- Raised time between virtual PI and add-to-cart request at product lists from 50ms to 500ms
 

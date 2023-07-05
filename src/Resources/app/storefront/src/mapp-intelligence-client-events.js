@@ -144,7 +144,7 @@ export default class MappIntelligenceClientEvents extends Plugin {
             setTimeout( () => {
                 window.wts.push(['send', 'pageupdate']);
                 window._ti = JSON.parse(backup);
-            }, 50);
+            }, 500);
         }
     }
 }
