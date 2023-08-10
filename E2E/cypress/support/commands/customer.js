@@ -23,9 +23,7 @@ Cypress.Commands.add('loginAsCustomer', (customerData) => {
 Cypress.Commands.add('createCustomer', (customerData) => {
     cy.visit('/account/logout');
     cy.visit('/account/login');
-    cy.get('#personalSalutation > option')
-        .eq(customerData.gender)
-        .then(element => cy.get('#personalSalutation').select(element.val()));
+    cy.get('#personalSalutation').select(customerData.gender);
     cy.get('#personalFirstName').type(customerData.firstName);
     cy.get('#personalLastName').type(customerData.lastName);
     cy.get('select[name=birthdayDay').select(customerData.birthday.day);

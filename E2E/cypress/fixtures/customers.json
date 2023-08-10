@@ -8,7 +8,7 @@
         "postal": "12345",
         "city": "Berlin",
         "country": 1,
-        "gender": 3,
+        "gender": "Mr.",
         "birthday": {
             "day": "1",
             "month": "1",
@@ -24,7 +24,7 @@
         "postal": "56789",
         "city": "Paris",
         "country": 12,
-        "gender": 2,
+        "gender": "Mrs.",
         "birthday": {
             "day": "1",
             "month": "1",
@@ -40,7 +40,7 @@
         "postal": "54321",
         "city": "London",
         "country": 2,
-        "gender": 1,
+        "gender": "Not specified",
         "birthday": {
             "day": "1",
             "month": "1",
