@@ -19,4 +19,9 @@
 - Add support for Shopware 6.5, drop support for 6.3 and lower
 # 1.1.1
 - Raised time between virtual PI and add-to-cart request at product lists from 50ms to 500ms
+# 1.2.0
+- Add additional product events in cart and wishlist (add, del, add-wl, del-wl)
+- Add product status 'checkout' on checkout page
+- fix calculation of multiple products during order and checkout
+- add contenCategory and ContentSubcategory in datalayer for checkout pages
 

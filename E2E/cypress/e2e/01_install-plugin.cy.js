@@ -12,6 +12,7 @@ describe("MappIntelligencePluginTests: Install and Config", () => {
         "MappIntelligence.config.consent": true,
         "MappIntelligence.config.required": false,
         "MappIntelligence.config.tiId": "136699033798929",
+        "core.cart.wishlistEnabled": true
       },
     }).then(() => {
       cy.visit("/");

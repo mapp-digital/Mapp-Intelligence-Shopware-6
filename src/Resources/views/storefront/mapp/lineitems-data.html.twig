@@ -1,0 +1,17 @@
+{% for lineItem in page.cart.lineItems %}
+    {% if lineItem.priceDefinition.price and lineItem.priceDefinition.price is float %}
+        {% set gaPrice = lineItem.priceDefinition.price %}
+    {% else %}
+        {% set gaPrice = lineItem.price.totalPrice %}
+    {% endif %}
+    <div class="d-none hidden {{ divClass }}"
+        {% if mappInclude('productShopwareId') %}data-product-shopware-id="{{ lineItem.id }}"{% endif %}
+        {% if mappInclude('productId') %}data-product-id="{{ lineItem.payload['productNumber']|e('html_attr') }}"{% endif %}
+        {% if mappInclude('productName') %}data-product-name="{{ lineItem.label|e('html_attr') }}"{% endif %}
+        {% if mappInclude('productCost') %}data-product-cost="{{ gaPrice }}"{% endif %}
+        {% if mappInclude('productCategories') %}data-product-categories="{{ getCategoryNames(lineItem.payload['categoryIds'])|json_encode|e('html_attr') }}"{% endif %}
+        {% if mappInclude('productQuantity') %}data-product-quantity={{lineItem.quantity}}{% endif %}
+        {% if mappInclude('productSoldOut') %}data-product-sold-out="{{ lineItem.payload['stock'] <= 0 ? '1' : '' }}";{% endif %}
+        {% if mappInclude('pageRequestType') %}data-page-request-type="virtual";{% endif %}
+    ></div>
+{% endfor %}

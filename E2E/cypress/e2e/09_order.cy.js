@@ -75,7 +75,7 @@ describe("Order tracking", () => {
 
             // SW seems to mix the order of line items randomly
             if (data.productId.slice(-3) === "Red") {
-              expect(data.productCost).to.equal("495.95;295.95");
+              expect(data.productCost).to.equal("2479.75;887.85");
               expect(data.productId).to.equal(
                 "MAPP10001;MappIntelligence-Variant-product-Red"
               );
@@ -84,7 +84,7 @@ describe("Order tracking", () => {
               );
               expect(data.productQuantity).to.equal("5;3");
             } else {
-              expect(data.productCost).to.equal("295.95;495.95");
+              expect(data.productCost).to.equal("887.85;2479.75");
               expect(data.productId).to.equal(
                 "MappIntelligence-Variant-product-Red;MAPP10001"
               );

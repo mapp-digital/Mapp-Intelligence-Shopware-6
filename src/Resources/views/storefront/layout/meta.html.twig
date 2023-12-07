@@ -7,9 +7,12 @@
             window._ti =  window._ti || {};
             {% if mappInclude('pageName') %}window._ti.pageName = location.host + location.pathname;{% endif %}
             {% if mappInclude('pageTitle') %}window._ti.pageTitle = '{{ metaInformation.metaTitle|e('js') }}';{% endif %}
+            {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
+            {% if mappInclude('shopwareRoute') %}window._ti.shopwareRoute = '{{ activeRoute }}';{% endif %}
 
             {% if context.customer != null %}
                 {% if mappInclude('customerId') %}window._ti.customerId = '{{ context.customer.id|e('js') }}';{% endif %}
+                {% if mappInclude('userLoggedIn') %}window._ti.userLoggedIn = true;{% endif %}
                 {% if mappInclude('eMailSubscription') %}window._ti.eMailSubscription = '{{ context.customer.newsletter ? '1' : '2' }}';{% endif %}
                 {% if mappInclude('gender') and context.customer.salutation.salutationKey != null %}window._ti.gender = '{{ getGender(context.customer.salutation.salutationKey) }}';{% endif %}
                 {% if mappInclude('age') and context.customer.birthday != null %}window._ti.age = '{{ getAge(context.customer.birthday) }}';{% endif %}
@@ -27,6 +30,21 @@
             {% if controllerName == 'LandingPage' %}
                 {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Content';{% endif %}
                 {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Landing Page';{% endif %}
+            {% endif %}
+
+            {% if activeRoute == 'frontend.checkout.cart.page' %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Checkout';{% endif %}
+                {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Cart';{% endif %}
+            {% endif %}
+
+            {% if activeRoute == 'frontend.checkout.confirm.page' %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Checkout';{% endif %}
+                {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Confirm';{% endif %}
+            {% endif %}
+
+            {% if activeRoute == 'frontend.checkout.finish.page' %}
+                {% if mappInclude('contentCategory') %}window._ti.contentCategory = 'Checkout';{% endif %}
+                {% if mappInclude('contentSubcategory') %}window._ti.contentSubcategory = 'Finish';{% endif %}
             {% endif %}
 
             {% if activeRoute == 'frontend.navigation.page' %}
@@ -66,7 +84,6 @@
                 {% if mappInclude('productQuantity') %}window._ti.productQuantity = '1';{% endif %}
                 {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'view';{% endif %}
                 {% if mappInclude('productSoldOut') %}window._ti.productSoldOut = '{{ page.product.availableStock <= 0 ? '1' : '' }}';{% endif %}
-                {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
                 {% if mappInclude('productCategories') %}window._ti.productCategories = JSON.parse('{{ getCategoryNames(page.product.categoryTree)|e('js')|json_encode|e('js') }}');{% endif %}
                 if(window._ti.productCategories && window._ti.productCategories[0]) {
                     {% if mappInclude('productCategory') %}window._ti.productCategory = window._ti.productCategories[0];{% endif %}
@@ -77,7 +94,6 @@
             {% endif %}
 
             {% if activeRoute == 'frontend.checkout.finish.page' %}
-                {% if mappInclude('currency') %}window._ti.currency = '{{ context.currency.isoCode }}';{% endif %}
 
                 {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'conf';{% endif %}
                 {% if mappInclude('orderId') %}window._ti.orderId = '{{ page.order.orderNumber|e('js') }}';{% endif %}
@@ -172,23 +188,14 @@
                 if(window._ti.productCategories && window._ti.productCategories[1]) {
                     {% if mappInclude('productSubCategory') %}window._ti.productSubCategory = window._ti.productCategories[1];{% endif %}
                 }
+                if(window._ti.productCost && window._ti.productQuantity) {
+                    var q = window._ti.productQuantity.split(';');
+                    window._ti.productCost = window._ti.productCost.split(';').map(function(c, i) {
+                        return (c * q[i]).toFixed(2);
+                    }).join(";");
+                }
                 {% if controllerAction == 'checkoutRegisterPage' or controllerAction == 'confirmPage' %}
-                    // put product info under cart, so no product view goes out
-                    window._ti.cart = {};
-                    (function(){
-                        var productKeys = [];
-                        var _r = /^product.*/;
-                        for(var key in window._ti){
-                            if(window._ti.hasOwnProperty(key) && _r.test(key)) {
-                                productKeys.push(key);
-                            }
-                        }
-                        for(var i=0;i<productKeys.length; i++) {
-                            var k = productKeys[i];
-                            window._ti.cart[k] = window._ti[k];
-                            delete window._ti[k];
-                        }
-                    }());
+                    {% if mappInclude('shoppingCartStatus') %}window._ti.shoppingCartStatus = 'checkout';{% endif %}
                 {% endif %}
             {% endif %}
         </script>
