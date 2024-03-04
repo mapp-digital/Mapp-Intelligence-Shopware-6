@@ -79,7 +79,7 @@ class MappExtension extends AbstractExtension
         $config = $this->systemConfigService->get('MappIntelligence.config',  $salesChannelId);
         if(!isset($config['blacklist'])) {
             return true;
-        } elseif (in_array($dataLayerKey, explode(',', filter_var($config['blacklist'], FILTER_SANITIZE_STRING)))) {
+        } elseif (in_array($dataLayerKey, array_map('htmlspecialchars', explode(',', $config['blacklist'])))) {
             return false;
         }
         return true;
