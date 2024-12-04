@@ -86,7 +86,7 @@ class MappExtension extends AbstractExtension
     }
     public static function getVersion()
     {
-        return "1.1.1";
+        return "1.3.0";
     }
 
 }

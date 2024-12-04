@@ -9,6 +9,8 @@ services:
     volumes:
       - ../composer.json:/var/www/html/custom/plugins/MappIntelligence/composer.json
       - ../src:/var/www/html/custom/plugins/MappIntelligence/src
+      - "shopware_intelligence_db_volume:/var/lib/mysql"
+      - "shopware_intelligence_shop_volume:/var/www/html"
     networks:
       - mapp
   cypress:
@@ -28,6 +30,11 @@ services:
       - ./wait-for-it.sh:/wait-for-it.sh
     networks:
       - mapp
+volumes:
+  shopware_intelligence_db_volume:
+    driver: local
+  shopware_intelligence_shop_volume:
+    driver: local
 
 networks:
     mapp:

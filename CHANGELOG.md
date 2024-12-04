@@ -23,5 +23,7 @@
 - Add additional product events in cart and wishlist (add, del, add-wl, del-wl)
 - Add product status 'checkout' on checkout page
 - fix calculation of multiple products during order and checkout
-- add contenCategory and ContentSubcategory in datalayer for checkout pages
+- add contentCategory and ContentSubcategory in datalayer for checkout pages
+# 1.3.0
+- compatibility exclusively with Shopware 6.6 and upwards 
 

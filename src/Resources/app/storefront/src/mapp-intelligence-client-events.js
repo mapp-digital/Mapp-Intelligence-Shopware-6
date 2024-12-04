@@ -1,12 +1,11 @@
 /* eslint-disable import/no-unresolved */
 /* global _tiConfig */
 /* eslint no-undef: "error" */
-import Plugin from 'src/plugin-system/plugin.class.js';
 import DomAccess from 'src/helper/dom-access.helper.js';
 import { COOKIE_CONFIGURATION_UPDATE } from 'src/plugin/cookie/cookie-configuration.plugin';
 // import DomIterator from 'src/helper/iterator.helper.js';
 
-export default class MappIntelligenceClientEvents extends Plugin {
+export default class MappIntelligenceClientEvents extends window.PluginBaseClass {
     cartItems = [];
     skipOnOpenCartRequest = false;
 

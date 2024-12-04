@@ -25,7 +25,7 @@ get-version:
 	@docker exec -t shopware.test php -r "require './vendor/composer/InstalledVersions.php';echo(Composer\InstalledVersions::getVersion('shopware/core'));"
 
 exec-cypress:
-	docker exec -it  mapp_e2e_shopware_cypress bash
+	docker exec -it mapp_e2e_shopware_cypress bash
 exec-shopware:
 	docker exec -it shopware.test bash
 
