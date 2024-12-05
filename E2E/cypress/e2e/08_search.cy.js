@@ -59,7 +59,7 @@ describe("Search products", () => {
         expect(data.numberOfSearchResults).to.equal("3");
         expect(data.pageName).to.equal("shopware.test/search");
         expect(data.pageNumber).to.equal("1");
-        expect(data.pageTitle).to.equal("Demostore");
+        expect(data.pageTitle).to.equal("Searchresult | Demostore");
       });
   });
 });

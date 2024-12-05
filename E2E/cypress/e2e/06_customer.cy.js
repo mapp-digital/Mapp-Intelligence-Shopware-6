@@ -42,7 +42,7 @@ describe("MappIntelligencePluginTests: User and account", () => {
       })
       .then(() => {
         expect(data.pageName).to.equal("shopware.test/account");
-        expect(data.pageTitle).to.equal("Demostore");
+        expect(data.pageTitle).to.equal("Overview | Demostore");
         expect(data.contentCategory).to.equal("Account");
         expect(data.gender).to.equal("1");
         expect(data.age).to.equal(yearsSince1970);
@@ -63,7 +63,7 @@ describe("MappIntelligencePluginTests: User and account", () => {
       })
       .then(() => {
         expect(data.pageName).to.equal("shopware.test/account");
-        expect(data.pageTitle).to.equal("Demostore");
+        expect(data.pageTitle).to.equal("Overview | Demostore");
         expect(data.contentCategory).to.equal("Account");
         expect(data.gender).to.equal("2");
         expect(data.age).to.equal(yearsSince1970);
@@ -84,7 +84,7 @@ describe("MappIntelligencePluginTests: User and account", () => {
       })
       .then(() => {
         expect(data.pageName).to.equal("shopware.test/account");
-        expect(data.pageTitle).to.equal("Demostore");
+        expect(data.pageTitle).to.equal("Overview | Demostore");
         expect(data.contentCategory).to.equal("Account");
         expect(data.gender).to.equal("0");
         expect(data.age).to.equal(yearsSince1970);

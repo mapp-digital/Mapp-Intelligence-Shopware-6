@@ -84,7 +84,7 @@ describe("Product detail datalayer", () => {
       );
     });
 
-    cy.get(".product-detail-quantity-input").clear().type("5");
+    cy.get(".js-quantity-selector").clear().type("5");
     cy.get(".btn-buy").click();
 
     cy.testTrackRequest().then((track) => {
@@ -165,7 +165,7 @@ describe("Product detail datalayer", () => {
       );
     });
 
-    cy.get(".product-detail-quantity-input").clear().type("5");
+    cy.get(".js-quantity-selector").clear().type("5");
     cy.contains("Add to shopping cart").click();
 
     cy.testTrackRequest().then((track) => {
@@ -308,7 +308,7 @@ describe("Product detail datalayer", () => {
     });
     cy.contains("MappIntelligence-Variant-product-Blue").should("be.visible");
 
-    cy.get(".product-detail-quantity-input").clear().type("5");
+    cy.get(".js-quantity-selector").clear().type("5");
     cy.contains("Add to shopping cart").click();
 
     cy.testTrackRequest().then((track) => {

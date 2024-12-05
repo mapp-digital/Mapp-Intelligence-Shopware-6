@@ -12,17 +12,19 @@ describe("Order tracking", () => {
 
     // add normal product and coupon
     cy.visit("/MappIntelligence-product-aeoeue/MAPP10001");
-    cy.get(".product-detail-quantity-input").clear().type("5");
+    cy.get(".js-quantity-selector").clear().type("5");
     cy.contains("Add to shopping cart").should("be.visible").click();
     cy.get("#addPromotionOffcanvasCartInput")
       .should("be.visible")
+      .should("not.be.disabled")
+      .focus()
       .type("mapptest{enter}");
     cy.contains("MappCoupon").should("be.visible");
 
     cy.visit(
       "/MappIntelligence-Variant-product/MappIntelligence-Variant-product-Red"
     );
-    cy.get(".product-detail-quantity-input").clear().type("3");
+    cy.get(".js-quantity-selector").clear().type("3");
     cy.contains("Add to shopping cart").should("be.visible").click();
     cy.get(".begin-checkout-btn").click();
     cy.get("#tos")
@@ -55,7 +57,7 @@ describe("Order tracking", () => {
             expect(data.gender).to.equal("1");
             expect(data.orderId).to.match(/^[0-9]{5}$/);
             expect(data.pageName).to.equal("shopware.test/checkout/finish");
-            expect(data.pageTitle).to.equal("Demostore");
+            expect(data.pageTitle).to.equal("Order finished | Demostore");
             expect(data.productCategory).to.equal(
               "MappTestProducts;MappTestProducts"
             );
