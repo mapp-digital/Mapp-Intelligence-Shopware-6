@@ -39,6 +39,9 @@ exec-cypress:
 exec-shopware:
 	docker exec -it shopware.test bash
 
+build-js:
+	docker exec -t shopware.test bash -c "./bin/build-storefront.sh"
+
 cypress-install:
 	docker exec -t mapp_e2e_shopware_cypress bash -c "cd /cypress && npm i"
 cypress-run:
