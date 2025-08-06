@@ -26,4 +26,7 @@
 - add contentCategory and ContentSubcategory in datalayer for checkout pages
 # 1.3.0
 - compatibility exclusively with Shopware 6.6 and upwards 
+# 1.4.0
+- remove support for Acquire
+- Intelligence: remove artificial product view before add from listing pages
 
