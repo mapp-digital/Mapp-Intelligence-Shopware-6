@@ -44,10 +44,10 @@ build-js:
 
 cypress-install:
 	docker exec -t mapp_e2e_shopware_cypress bash -c "cd /cypress && npm i"
+cypress-prepare:
+	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run --spec '!/cypress/e2e/**/*.cy.js,cypress/e2e/00*.cy.js'"
 cypress-run:
-	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run"
-cypress-run-no-prepare:
-	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run --spec '/cypress/e2e/**/*.cy.js,!cypress/e2e/00_preparations.cy.js'"
+	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run --spec '/cypress/e2e/**/*.cy.js,!cypress/e2e/00*.cy.js'"
 cypress-local:
 	cd ./E2E && if [ ! -d "./node_modules" ];then npm install;fi && docker-compose up -d && npm run open
 

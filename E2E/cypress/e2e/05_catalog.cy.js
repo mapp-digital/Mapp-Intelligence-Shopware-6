@@ -50,14 +50,19 @@ describe("MappIntelligencePluginTests: Homepage", () => {
         expect(data.contentSubcategory).to.equal("Product Overview");
         expect(data.pageNumber).to.equal("1");
       });
-    cy.get("#p2").click({ force: true });
+    cy.wait(1000);
+    cy.get('a[href="?p=2"]').first().click({ force: true });
+        cy.testTrackRequest().then((track) => {
+      expect(track.pageName).to.equal("shopware.test/Clothing/");
+      expect(track.ct).to.equal("shopware.test.Clothing.");
+    });
     cy.testTrackRequest().then((track) => {
       expect(track.pageName).to.equal("shopware.test/Clothing/");
       expect(track.cg1).to.equal("Catalogue");
       expect(track.cg2).to.equal("Product Overview");
       expect(track.cg20).to.equal("2");
       expect(track.pu).to.equal(
-        "http://shopware.test/Clothing/?order=name-asc&p=2"
+        "http://shopware.test/Clothing/?p=2&order=name-asc"
       );
     });
     cy.window()
@@ -94,12 +99,13 @@ describe("MappIntelligencePluginTests: Homepage", () => {
         expect(data.contentSubcategory).to.equal("Product Overview");
         expect(data.pageNumber).to.equal("1");
       });
+    cy.wait(1000);
     cy.get(".sorting.form-select").select("price-desc");
     cy.testTrackRequest().then((track) => {
       expect(track.pageName).to.equal("shopware.test/Clothing/");
       expect(track.ct).to.equal("Sorting: Price descending");
       expect(track.pu).to.equal(
-        "http://shopware.test/Clothing/?order=price-desc&p=1"
+        "http://shopware.test/Clothing/?p=1&order=price-desc"
       );
     });
   });
