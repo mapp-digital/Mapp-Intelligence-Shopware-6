@@ -14,6 +14,64 @@ export default class MappIntelligenceClientEvents extends window.PluginBaseClass
         this._handleCheckoutCartAndConfirmPages();
         this._handleWishlistPage();
         this._addClickListenerToWishlistIcons(true);
+        this._registerPageChanges();
+        this._registerOrderChanges();
+
+        const listings = window.PluginManager.getPluginInstances('Listing');
+        listings.forEach((listing) => {
+            listing.$emitter.subscribe('Listing/afterRenderResponse', () => {
+                this._updateAddToCart();
+                this._registerPageChanges();
+                this._registerOrderChanges();
+            });
+        });
+
+    }
+
+    /**
+     * Puts click listener on elements that change the page
+     * and fires page request, in timeout because elements
+     * might not in DOM at this point
+     * 
+     * @private
+     */
+    _registerPageChanges() {
+        setTimeout(()=>{
+            const paginationInstances = window.PluginManager.getPluginInstances('ListingPagination');
+            paginationInstances.forEach((page) =>{
+                const buttons = page.el.querySelectorAll(page.options.paginationItemSelector);
+                buttons.forEach((button) => {
+                    button.addEventListener('click', (e)=>{
+                        if(window.wts && window._ti.pageNumber) {
+                            window._ti.pageNumber = e.currentTarget.dataset.page;
+                            window.wts.push(['send', 'pageupdate']);
+                        }
+                    });
+                });
+            });
+        }, 500);
+    }
+
+    /**
+     * Puts change listener on sort select element
+     * and fires event request, in timeout because elements
+     * might not in DOM at this point
+     * 
+     * @private
+     */
+    _registerOrderChanges() {
+        setTimeout(()=>{
+        const sortingInstances = window.PluginManager.getPluginInstances('ListingSorting');
+        sortingInstances.forEach((sort) =>{
+            const select = sort.el.querySelector('select');
+            select.addEventListener('change', (e)=>{
+                const selectedOption = e.target.querySelector('option[value="'+ e.target.value +'"]')
+                if(window.wts) {
+                    window.wts.push(['send', 'click', { linkId: 'Sorting: ' + selectedOption.label }]);
+                }
+            });
+        });
+        }, 500);
     }
 
     /**
@@ -123,13 +181,6 @@ export default class MappIntelligenceClientEvents extends window.PluginBaseClass
     _subscribeEvents() {
         document.$emitter.subscribe(COOKIE_CONFIGURATION_UPDATE, this._loadTiLoader);
 
-        const paginations = window.PluginManager.getPluginInstances('ListingPagination');
-        paginations.forEach( (element) => {
-            element.$emitter.subscribe('change',  (event) => {
-                this._paginationHandler(event);
-            });
-        });
-
         const searchWidgets = window.PluginManager.getPluginInstances('SearchWidget');
         searchWidgets.forEach( (element) => {
             element.$emitter.subscribe('afterSuggest',  (event) => {
@@ -164,34 +215,6 @@ export default class MappIntelligenceClientEvents extends window.PluginBaseClass
                 });
             });
         }
-
-        let filterPlugins = [
-            'FilterBoolean',
-            'FilterMultiSelect',
-            'FilterPropertySelect',
-            'FilterRange',
-            'FilterRating',
-            'FilterRatingSelect'
-        ];
-        const pluginList = window.PluginManager.getPluginList();
-        filterPlugins = filterPlugins.filter((filterType) => pluginList.hasOwnProperty(filterType));
-        filterPlugins.forEach( (filterType) => {
-            var filters = window.PluginManager.getPluginInstances(filterType);
-            filters.forEach( (element) => {
-                element.$emitter.subscribe('change',  () => {
-                    this._updateAddToCart();
-                    const resetButton = document.querySelector('.filter-reset-all');
-                    if(resetButton) {
-                        setTimeout(() => {
-                            resetButton.addEventListener('click', () => {
-                                this._updateAddToCart();
-                            });
-                        },500);
-                    }
-                });
-            });
-        });
-
         this._subscribeAddToCart();
     }
 
@@ -352,7 +375,7 @@ export default class MappIntelligenceClientEvents extends window.PluginBaseClass
      * @private
      */
     _subscribeAddToCart() {
-        var addToCarts = window.PluginManager.getPluginInstances('AddToCart');
+        const addToCarts = window.PluginManager.getPluginInstances('AddToCart');
         addToCarts.forEach( (element) => {
             element.$emitter.subscribe('beforeFormSubmit',  (event) => {
                 this._addToCartHandler(event);
@@ -378,35 +401,6 @@ export default class MappIntelligenceClientEvents extends window.PluginBaseClass
     }
 
     /**
-     * Fired after page changed, invokes reindexing of 
-     * new AddToCart elements and fires trackrequests
-     *
-     * @param {Event} event
-     * 
-     * @private
-     */
-    _paginationHandler(event) {
-        const page = event.target.getAttribute('value');
-
-        let sorting = null;
-        if(event.target.options) {
-            const selectedFilterOption = event.target.options.selectedIndex;
-            sorting = event.target.options[selectedFilterOption].innerText;
-        }
-        this._updateAddToCart();
-        if(page) {
-            if(window.wts && window._ti.pageNumber) {
-                window._ti.pageNumber = page;
-                window.wts.push(['send', 'pageupdate']);
-            }
-        } else if (sorting) {
-            if(window.wts) {
-                window.wts.push(['send', 'click', { linkId: 'Sorting: ' + sorting }]);
-            }
-        }
-    }
-
-    /**
      * Reindexes links via pixel
      * 
      * @private
@@ -427,8 +421,8 @@ export default class MappIntelligenceClientEvents extends window.PluginBaseClass
      */
     _addToCartHandler(event) {
         this.skipOnOpenCartRequest = true;
-        var backup = JSON.stringify(window._ti);
-        var trackingData = { ...DomAccess.querySelector(event.target, '.mapp-tracking-data', true).dataset };
+        const backup = JSON.stringify(window._ti);
+        const trackingData = { ...DomAccess.querySelector(event.target, '.mapp-tracking-data', true).dataset };
         if(trackingData.productQuantity && trackingData.productShopwareId) {
             trackingData.productQuantity = event.target.elements['lineItems[' + trackingData.productShopwareId + '][quantity]'].value;
         }
@@ -446,8 +440,17 @@ export default class MappIntelligenceClientEvents extends window.PluginBaseClass
         }
         window._ti = {...window._ti, ...trackingData}
         if(window.wts) {
-            window.wts.push(['send', 'pageupdate']);
-            this._restoreDatalayer(backup);
+            const backup2 = JSON.stringify(window._ti);
+            if(window._ti.hasOwnProperty('contentSubcategory') && window._ti.contentSubcategory !== 'Product Detail') {
+                window._ti.shoppingCartStatus = 'view';
+                window._ti.productQuantity = '1';
+                window.wts.push(['send', 'pageupdate']);
+            }
+            setTimeout( () => {
+                window._ti = JSON.parse(backup2);
+                window.wts.push(['send', 'pageupdate']);
+                this._restoreDatalayer(backup);
+            }, 500);
         }
     }
 }
