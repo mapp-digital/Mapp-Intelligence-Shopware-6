@@ -2,6 +2,7 @@ USER_NAME := $(shell id -un)
 USER_ID := $(shell id -u)
 GROUP_ID := $(shell id -g)
 USER_GROUP = $(USER_ID):$(GROUP_ID)
+VERSION := $(shell jq -r .version composer.json)
 
 export USER_ID
 export GROUP_ID
@@ -13,7 +14,7 @@ build-e2e:
 stop-e2e:
 	cd ./E2E && docker-compose down
 daily:
-	make start-e2e && make cypress-install && make install && make activate && make cypress-run
+	make start-e2e && make cypress-install && make install && make activate && make cypress-prepare && make cypress-run
 delete-image:
 	docker image rm dockware/play
 delete-volumes:
@@ -23,7 +24,7 @@ install:
 activate:
 	docker exec -t shopware.test bash -c "./bin/console plugin:activate MappIntelligence"
 prepare:
-	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run --spec '/cypress/e2e/00_preparations.cy.js,/cypress/e2e/01_install-plugin.cy.js'"
+	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run --spec '/cypress/e2e/00*.cy.js,/cypress/e2e/01_install-plugin.cy.js'"
 ready:
 	@if ping -c 1 shopware.test | grep "127.0.0.1" > /dev/null; then \
 		echo "shopware.test resolves locally. Proceeding..."; \
@@ -52,4 +53,4 @@ cypress-local:
 	cd ./E2E && if [ ! -d "./node_modules" ];then npm install;fi && docker-compose up -d && npm run open
 
 zip:
-	mkdir MappIntelligence && cp -r ./src ./MappIntelligence/src && cp ./composer.json ./MappIntelligence/composer.json && cp CHANGELOG.md ./MappIntelligence/CHANGELOG.md && cp ./LICENSE ./MappIntelligence/LICENSE && zip -r MappShopware.zip ./MappIntelligence && rm -rf ./MappIntelligence
+	mkdir MappIntelligence && cp -r ./src ./MappIntelligence/src && cp ./composer.json ./MappIntelligence/composer.json && cp CHANGELOG.md ./MappIntelligence/CHANGELOG.md && cp ./LICENSE ./MappIntelligence/LICENSE && zip -r MappIntelligence_for_Shopware6_$(VERSION).zip ./MappIntelligence && rm -rf ./MappIntelligence
