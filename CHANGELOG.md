@@ -25,5 +25,7 @@
 - fix calculation of multiple products during order and checkout
 - add contentCategory and ContentSubcategory in datalayer for checkout pages
 # 1.3.0
-- compatibility exclusively with Shopware 6.6 and upwards 
-
+- compatibility exclusively with Shopware 6.6
+# 1.4.0
+- remove support for Mapp Acquire
+- compatibility exclusively with Shopware 6.7

@@ -7,29 +7,6 @@ beforeEach(() => {
 describe("MappIntelligencePluginTests: User and account", () => {
   const yearsSince1970 = (new Date().getFullYear() - 1970).toString();
 
-  it("register customers", () => {
-    // activate birthday
-    cy.intercept({
-      url: "/api/_action/system-config/batch",
-      method: "post",
-    }).as("saveConfig");
-
-    cy.loginViaApi().then(() => {
-      cy.visit("/admin#/sw/settings/login/registration/index");
-    });
-    cy.get('input[name="core.loginRegistration.showBirthdayField"]').check({
-      force: true,
-    });
-    cy.get(".sw-button-process__content").click();
-    cy.wait("@saveConfig");
-
-    cy.fixture("customers").then((customers) => {
-      cy.createCustomer(customers.female);
-      cy.createCustomer(customers.male);
-      cy.createCustomer(customers.unknown);
-    });
-  });
-
   it("Login male customer", () => {
     cy.fixture("customers").then((customers) => {
       cy.loginAsCustomer(customers.male);

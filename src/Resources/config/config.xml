@@ -33,14 +33,6 @@
             <helpText>Please indicate any attribute you do not want to display in your data layer (comma-separated)</helpText>
             <copyable>true</copyable>
         </input-field>
-        <input-field type="text">
-            <name>acquire</name>
-            <label lang="de-DE">Mapp Acquire</label>
-            <label>Mapp Acquire</label>
-            <helpText lang="de-DE">Wenn Sie Mapp Acquire nutzen, fügen Sie hier den Trackingcode ein.</helpText>
-            <helpText>If you use Mapp Acquire alongside Mapp Intelligence, please add your Mapp Acquire tracking script here.</helpText>
-            <copyable>true</copyable>
-        </input-field>
         <input-field type="checkbox">
             <name>consent</name>
             <defaultValue>true</defaultValue>

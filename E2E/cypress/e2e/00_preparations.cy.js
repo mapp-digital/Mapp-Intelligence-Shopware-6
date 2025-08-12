@@ -198,7 +198,7 @@ describe("MappIntelligencePluginTests: General preparations", () => {
           .then(() => {
             cy.wait(10000);
             cy.visit("/Clothing/", { timeout: 30000 });
-            cy.get("#p1-bottom");
+            cy.get('a[href="?p=2"]');
           });
       });
     });

@@ -9,7 +9,6 @@ The Shopware 6 Mapp Cloud extension lets you implement Tag Integration in your S
 
 - loads the tiLoader.
 - provides a _ti dataLayer object.
-- optionally loads one Mapp Acquire pixel
 - automatically indexes links of AJAX search results for automatic link tracking and
 - in addition to the page requests after page loads, a PI is fired when adding a product to the cart, when changing the page on product listing pages or search result pages, and an event request when sorting product listings.
 - if a product is added to cart outside of a product detail page, a product view request is fired right before the add to cart request - use dataLayer attribute 'pageRequestType' to filter those PIs and get the 'real' page impressions
