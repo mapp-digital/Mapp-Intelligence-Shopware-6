@@ -8,15 +8,22 @@ export USER_ID
 export GROUP_ID
 
 start-e2e:
-	cd ./E2E && docker-compose up -d
+	cd ./E2E && docker compose up -d
 build-e2e:
-	cd ./E2E && docker-compose build --no-cache
+	cd ./E2E && docker compose build --no-cache
 stop-e2e:
-	cd ./E2E && docker-compose down
+	cd ./E2E && docker compose down
 daily:
-	make start-e2e && make cypress-install && make install && make activate && make cypress-prepare && make cypress-run
+	make start-e2e && make wait-shopware && make cypress-install && make install && make activate && make cypress-prepare && make cypress-run
+# dockware prints "... IS READY" once Apache, MySQL and Shopware are up; bin/console does not exist before that
+wait-shopware:
+	@for i in $$(seq 1 150); do \
+		if docker logs shopware.test 2>&1 | grep -q "IS READY"; then echo "Shopware is ready"; exit 0; fi; \
+		sleep 2; \
+	done; \
+	echo "Shopware did not get ready within 5 minutes"; docker logs --tail 30 shopware.test; exit 1
 delete-image:
-	docker image rm dockware/play
+	docker image rm dockware/shopware
 delete-volumes:
 	docker volume rm e2e_shopware_intelligence_db_volume && docker volume rm e2e_shopware_intelligence_shop_volume
 install:
@@ -50,7 +57,7 @@ cypress-prepare:
 cypress-run:
 	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run --spec '/cypress/e2e/**/*.cy.js,!cypress/e2e/00*.cy.js'"
 cypress-local:
-	cd ./E2E && if [ ! -d "./node_modules" ];then npm install;fi && docker-compose up -d && npm run open
+	cd ./E2E && if [ ! -d "./node_modules" ];then npm install;fi && docker compose up -d && npm run open
 
 zip:
 	mkdir MappIntelligence && cp -r ./src ./MappIntelligence/src && cp ./composer.json ./MappIntelligence/composer.json && cp CHANGELOG.md ./MappIntelligence/CHANGELOG.md && cp ./LICENSE ./MappIntelligence/LICENSE && zip -r MappIntelligence_for_Shopware6_$(VERSION).zip ./MappIntelligence && rm -rf ./MappIntelligence

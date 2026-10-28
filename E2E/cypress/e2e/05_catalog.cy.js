@@ -1,5 +1,14 @@
 // / <reference types="Cypress" />
 
+// Shopware 6.7.15 changed the order of the listing parameters (?order=…&p=… instead of ?p=…&order=…),
+// so compare path and parameters, not the URL string
+const expectSameUrl = (actual, expected) => {
+  const a = new URL(actual);
+  const e = new URL(expected);
+  expect(a.origin + a.pathname).to.equal(e.origin + e.pathname);
+  expect(Object.fromEntries(a.searchParams)).to.deep.equal(Object.fromEntries(e.searchParams));
+};
+
 describe("MappIntelligencePluginTests: Homepage", () => {
   beforeEach(() => {
     cy.consentMapp();
@@ -61,9 +70,7 @@ describe("MappIntelligencePluginTests: Homepage", () => {
       expect(track.cg1).to.equal("Catalogue");
       expect(track.cg2).to.equal("Product Overview");
       expect(track.cg20).to.equal("2");
-      expect(track.pu).to.equal(
-        "http://shopware.test/Clothing/?p=2&order=name-asc"
-      );
+      expectSameUrl(track.pu, "http://shopware.test/Clothing/?p=2&order=name-asc");
     });
     cy.window()
       .then((win) => {
@@ -104,9 +111,7 @@ describe("MappIntelligencePluginTests: Homepage", () => {
     cy.testTrackRequest().then((track) => {
       expect(track.pageName).to.equal("shopware.test/Clothing/");
       expect(track.ct).to.equal("Sorting: Price descending");
-      expect(track.pu).to.equal(
-        "http://shopware.test/Clothing/?p=1&order=price-desc"
-      );
+      expectSameUrl(track.pu, "http://shopware.test/Clothing/?p=1&order=price-desc");
     });
   });
 });

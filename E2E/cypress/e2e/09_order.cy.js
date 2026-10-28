@@ -11,14 +11,20 @@ describe("Order tracking", () => {
     });
 
     // add normal product and coupon
+    cy.intercept("POST", "/checkout/line-item/add").as("addToCart");
     cy.visit("/MappIntelligence-product-aeoeue/MAPP10001");
     cy.get(".js-quantity-selector").clear().type("5");
     cy.contains("Add to shopping cart").should("be.visible").click();
-    cy.get("#addPromotionOffcanvasCartInput")
-      .should("be.visible")
-      .should("not.be.disabled")
-      .focus()
-      .type("mapptest{enter}");
+    cy.wait("@addToCart");
+    // the coupon goes in by request: the offcanvas cart reloads after adding a product, and typing into it
+    // raced with that reload on slower machines (only "m" got submitted)
+    cy.request({
+      method: "POST",
+      url: "/checkout/promotion/add",
+      form: true,
+      body: { code: "mapptest" },
+    });
+    cy.visit("/checkout/cart");
     cy.contains("MappCoupon").should("be.visible");
 
     cy.visit(
