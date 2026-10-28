@@ -1,3 +1,5 @@
+# fixed project name: the folder name "E2E" alone would give generic names (e2e-cypress) that other repos could share
+name: mapp_e2e_shopware
 services:
   shopware:
     image: dockware/shopware:latest

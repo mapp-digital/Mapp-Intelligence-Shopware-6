@@ -14,7 +14,7 @@ build-e2e:
 stop-e2e:
 	cd ./E2E && docker compose down
 daily:
-	make start-e2e && make wait-shopware && make cypress-install && make install && make activate && make cypress-prepare && make cypress-run
+	make start-e2e && make wait-shopware && make install && make activate && make seed && make cypress-run
 # dockware prints "... IS READY" once Apache, MySQL and Shopware are up; bin/console does not exist before that
 wait-shopware:
 	@for i in $$(seq 1 150); do \
@@ -25,17 +25,17 @@ wait-shopware:
 delete-image:
 	docker image rm dockware/shopware
 delete-volumes:
-	docker volume rm e2e_shopware_intelligence_db_volume && docker volume rm e2e_shopware_intelligence_shop_volume
+	docker volume rm mapp_e2e_shopware_shopware_intelligence_db_volume && docker volume rm mapp_e2e_shopware_shopware_intelligence_shop_volume
 install:
 	docker exec -t shopware.test bash -c "./bin/console plugin:refresh && ./bin/console plugin:install MappIntelligence"
 activate:
 	docker exec -t shopware.test bash -c "./bin/console plugin:activate MappIntelligence"
 prepare:
-	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run --spec '/cypress/e2e/00*.cy.js,/cypress/e2e/01_install-plugin.cy.js'"
+	make seed && docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run --browser chrome --spec '/cypress/e2e/01_install-plugin.cy.js'"
 ready:
 	@if ping -c 1 shopware.test | grep "127.0.0.1" > /dev/null; then \
 		echo "shopware.test resolves locally. Proceeding..."; \
-		make install && make activate && make cypress-install && make prepare; \
+		make install && make activate && make prepare; \
 	else \
 		echo "Warning: shopware.test does not resolve to 127.0.0.1. Please check your /etc/hosts configuration."; \
 	fi
@@ -50,12 +50,11 @@ exec-shopware:
 build-js:
 	docker exec -t shopware.test bash -c "./bin/build-storefront.sh"
 
-cypress-install:
-	docker exec -t mapp_e2e_shopware_cypress bash -c "cd /cypress && npm i"
-cypress-prepare:
-	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run --spec '!/cypress/e2e/**/*.cy.js,cypress/e2e/00*.cy.js'"
+# test data (storefront URL, coupon, landing page, categories, products, customers), can run again on the same shop
+seed:
+	docker exec -t mapp_e2e_shopware_cypress node /cypress/seed/seed.js
 cypress-run:
-	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run --spec '/cypress/e2e/**/*.cy.js,!cypress/e2e/00*.cy.js'"
+	docker exec -t mapp_e2e_shopware_cypress bash -c "cypress run --browser chrome --spec '/cypress/e2e/**/*.cy.js'"
 cypress-local:
 	cd ./E2E && if [ ! -d "./node_modules" ];then npm install;fi && docker compose up -d && npm run open
 

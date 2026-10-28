@@ -14,16 +14,22 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-require('@shopware-ag/e2e-testsuite-platform/cypress/support');
 import './commands';
 import './commands/commands';
 import './commands/customer';
-import './commands/products';
 import './commands/consentCookie';
 import './commands/shipment';
-import './commands/category';
-import './commands/promotion';
 import './commands/api';
+
+// test data comes from seed/seed.js (make seed), not from specs
+
+// errors of the shop's own JavaScript must not fail the tests
+// (this used to come with @shopware-ag/e2e-testsuite-platform)
+Cypress.on('uncaught:exception', () => false);
+
+Cypress.Screenshot.defaults({
+    capture: 'viewport',
+});
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
